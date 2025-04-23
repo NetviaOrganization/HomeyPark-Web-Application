@@ -5,8 +5,12 @@ import MyReservationsPage from '../features/reservations/pages/MyReservationsPag
 import MyParkingsPage from '../features/parking/pages/MyParkingsPage'
 import NotFoundPage from '../shared/page/NotFoundPage'
 import ParkingDetailPage from '../features/parking/pages/ParkingDetailPage'
+import LoginPage from '../features/auth/pages/LoginPage'
+import SignUpPage from '../features/auth/pages/SignUpPage'
 
 export const router = createBrowserRouter([
+  { path: '/login', Component: LoginPage },
+  { path: '/signup', Component: SignUpPage },
   {
     path: '/',
     Component: DashboardLayout,
