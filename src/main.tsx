@@ -4,11 +4,17 @@ import { PrimeReactProvider } from 'primereact/api'
 import './index.css'
 import { RouterProvider } from 'react-router'
 import { router } from './app/router/index.tsx'
+import { APIProvider } from '@vis.gl/react-google-maps'
+import { env } from './env/index.ts'
+
+// console.log('ENV', env.googleMaps.apiKey)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <PrimeReactProvider>
-      <RouterProvider router={router} />
-    </PrimeReactProvider>
+    <APIProvider apiKey={env.googleMaps.apiKey}>
+      <PrimeReactProvider>
+        <RouterProvider router={router} />
+      </PrimeReactProvider>
+    </APIProvider>
   </StrictMode>
 )
