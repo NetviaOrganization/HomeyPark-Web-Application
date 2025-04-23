@@ -30,6 +30,18 @@ class ParkingService extends BaseService<Parking> {
       throw error
     }
   }
+
+  public async getAllByUserId(userId: string | number) {
+    try {
+      const response = await this.http.get<Parking[]>(
+        `${this.baseUrl}/user/${userId}`
+      )
+      return response.data
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      throw error
+    }
+  }
 }
 
 export default ParkingService

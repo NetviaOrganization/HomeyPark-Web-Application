@@ -1,36 +1,49 @@
-import { useState, useEffect, useRef } from 'react'
+import { DependencyList, useEffect, useRef, useState } from 'react'
 
-interface PromiseState<T> {
-  data: T | null
-  error: Error | null
-  loading: boolean
-}
+export function usePromise<T>(
+  promiseFactory: () => Promise<T> | null,
+  deps: DependencyList[] = []
+) {
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState<T | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [error, setError] = useState<any>(null)
 
-type PromiseOrFn<T> = Promise<T> | (() => Promise<T>)
-
-export function usePromise<T>(promiseOrFn: PromiseOrFn<T>) {
-  const promiseRef = useRef(promiseOrFn)
-  const [state, setState] = useState<PromiseState<T>>({
-    data: null,
-    error: null,
-    loading: true,
-  })
+  const active = useRef(true)
+  const currentPromise = useRef<Promise<T> | null>(null)
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await (typeof promiseRef.current === 'function'
-          ? promiseRef.current()
-          : promiseRef.current)
+    const promise = promiseFactory()
+    if (!promise) return
 
-        setState({ data: result, error: null, loading: false })
-      } catch (error) {
-        setState({ data: null, error: error as Error, loading: false })
-      }
+    active.current = true
+    setLoading(true)
+    setData(null)
+    setError(null)
+
+    currentPromise.current = promise
+
+    promise
+      .then((res) => {
+        if (active.current && currentPromise.current === promise) {
+          setData(res)
+        }
+      })
+      .catch((err) => {
+        if (active.current && currentPromise.current === promise) {
+          setError(err)
+        }
+      })
+      .finally(() => {
+        if (active.current && currentPromise.current === promise) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active.current = false
     }
+  }, deps)
 
-    fetchData()
-  }, []) // Empty dependency array since we're using ref
-
-  return state
+  return { data, loading, error }
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export default function Footer() {
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(false)
 
   return (
     <footer className="bg-[var(--primary-color)] text-white px-8 py-3 text-sm">

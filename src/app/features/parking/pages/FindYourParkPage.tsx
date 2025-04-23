@@ -2,7 +2,7 @@ import BasePage from '@/app/shared/page/BasePage'
 import { Map, Marker, useMap } from '@vis.gl/react-google-maps'
 import { useGeolocation } from '../../../shared/hooks/useGeolocation'
 import { usePromise } from '@/app/shared/hooks/usePromise'
-import ParkingService from '../services/ParkingService'
+import ParkingService from '../services/parkingService'
 import { useNavigate } from 'react-router'
 import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
 import Title from '@/app/shared/components/Title'
@@ -20,7 +20,7 @@ const FindYourParkPage = () => {
   const navigate = useNavigate()
   const { latitude, longitude, loading, error } = useGeolocation()
   const map = useMap('find-park-map')
-  const { data: parkingList, loading: parkingLoading } = usePromise(
+  const { data: parkingList, loading: parkingLoading } = usePromise(() =>
     parkingService.getAll()
   )
 
