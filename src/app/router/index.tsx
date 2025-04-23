@@ -8,6 +8,7 @@ import ParkingDetailPage from '../features/parking/pages/ParkingDetailPage'
 import LoginPage from '../features/auth/pages/LoginPage'
 import SignUpPage from '../features/auth/pages/SignUpPage'
 import { useUser } from '../features/auth/context/UserContext'
+import CreateEditParkingPage from '../features/parking/pages/CreateEditParkingPage'
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,20 @@ export const router = createBrowserRouter([
       },
       {
         path: '/my-garages',
-        Component: MyParkingsPage,
+        // Component: MyParkingsPage,
+        children: [
+          { path: '', Component: MyParkingsPage },
+          {
+            id: 'parking/create',
+            path: 'create',
+            Component: CreateEditParkingPage,
+          },
+          {
+            id: 'parking/edit',
+            path: 'edit/:id',
+            Component: CreateEditParkingPage,
+          },
+        ],
       },
       {
         path: '*',

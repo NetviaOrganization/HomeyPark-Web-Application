@@ -5,6 +5,7 @@ import ParkingService from '../services/parkingService'
 import { useUser } from '../../auth/context/UserContext'
 import ParkingCard from '../components/ParkingCard'
 import { createUseStyles } from 'react-jss'
+import { useNavigate } from 'react-router'
 
 const parkingService = new ParkingService()
 
@@ -18,6 +19,7 @@ const useStyles = createUseStyles({
 
 const MyParkingsPage = () => {
   const { user } = useUser()
+  const navigate = useNavigate()
   const classes = useStyles()
 
   const { data, loading, error } = usePromise(() =>
@@ -36,7 +38,10 @@ const MyParkingsPage = () => {
         ) : data?.length ? (
           <div className={classes.cardList}>
             {data.map((parking) => (
-              <ParkingCard parking={parking} />
+              <ParkingCard
+                parking={parking}
+                onEdit={() => navigate(`edit/${parking.id}`)}
+              />
             ))}
           </div>
         ) : null}

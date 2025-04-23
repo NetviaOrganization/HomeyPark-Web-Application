@@ -4,7 +4,7 @@ import { env } from '@/env'
 import Markdown from 'react-markdown'
 import { Button } from 'primereact/button'
 
-const ParkingCard: FC<Props> = ({ parking }) => {
+const ParkingCard: FC<Props> = ({ parking, onEdit, onDelete }) => {
   const { address, numDirection, latitude, longitude, city, street } =
     parking.location
   return (
@@ -32,6 +32,7 @@ const ParkingCard: FC<Props> = ({ parking }) => {
 
         <div className="flex gap-2 mt-auto pt-4">
           <Button
+            onClick={onDelete}
             className="w-full"
             label="Borrar"
             severity="danger"
@@ -39,6 +40,7 @@ const ParkingCard: FC<Props> = ({ parking }) => {
             icon="pi pi-trash"
           />
           <Button
+            onClick={onEdit}
             className="w-full"
             label="Editar"
             size="small"
@@ -52,5 +54,7 @@ const ParkingCard: FC<Props> = ({ parking }) => {
 
 interface Props {
   parking: Parking
+  onEdit?: () => void
+  onDelete?: () => void
 }
 export default ParkingCard
