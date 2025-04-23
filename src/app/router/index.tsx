@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, Navigate, useLocation } from 'react-router'
 import DashboardLayout from '../layout/DashboardLayout'
 import FindYourParkPage from '../features/parking/pages/FindYourParkPage'
 import MyReservationsPage from '../features/reservations/pages/MyReservationsPage'
@@ -7,13 +7,17 @@ import NotFoundPage from '../shared/page/NotFoundPage'
 import ParkingDetailPage from '../features/parking/pages/ParkingDetailPage'
 import LoginPage from '../features/auth/pages/LoginPage'
 import SignUpPage from '../features/auth/pages/SignUpPage'
+import { useUser } from '../features/auth/context/UserContext'
 
 export const router = createBrowserRouter([
-  { path: '/login', Component: LoginPage },
-  { path: '/signup', Component: SignUpPage },
+  {
+    path: '/login',
+    element: <LoginRedirect />,
+  },
+  { path: '/signup', element: <SignupRedirect /> },
   {
     path: '/',
-    Component: DashboardLayout,
+    element: <ProtectedRoute />,
     children: [
       {
         path: '/find-your-parking',
@@ -43,3 +47,38 @@ export const router = createBrowserRouter([
     ],
   },
 ])
+
+function ProtectedRoute() {
+  const { isAuthenticated } = useUser()
+  const location = useLocation()
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  return <DashboardLayout />
+}
+
+function LoginRedirect() {
+  const { isAuthenticated } = useUser()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/find-your-parking'
+
+  if (isAuthenticated) {
+    return <Navigate to={from} replace />
+  }
+
+  return <LoginPage />
+}
+
+function SignupRedirect() {
+  const { isAuthenticated } = useUser()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/find-your-parking'
+
+  if (isAuthenticated) {
+    return <Navigate to={from} replace />
+  }
+
+  return <SignUpPage />
+}

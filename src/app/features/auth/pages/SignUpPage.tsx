@@ -3,30 +3,52 @@ import Title from '@/app/shared/components/Title'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import AuthTemplate from '../template/AuthTemplate'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
+import { useState } from 'react'
+import AuthService from '../services/authService'
+import { useUser } from '../context/UserContext'
+
+const authService = new AuthService()
+const defaultValues = {
+  email: '',
+  firstName: '',
+  lastName: '',
+  password: '',
+  repeatPassword: '',
+  captcha: false,
+}
 
 const SignUpPage = () => {
-  const defaultValues = {
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: '',
-    repeatPassword: '',
-    captcha: false,
-  }
-
+  const [loading, setLoading] = useState(false)
+  const { setUser } = useUser()
+  const navigate = useNavigate()
   const { control, handleSubmit, setValue } = useForm({
     defaultValues,
     shouldFocusError: true,
   })
 
-  const onSubmit = (data: typeof defaultValues) => {
+  const onSubmit = async (data: typeof defaultValues) => {
     if (!data.captcha) return
 
-    console.log('DATA', data)
+    setLoading(true)
+    try {
+      const user = await authService.signUp(
+        data.email,
+        data.firstName,
+        data.lastName,
+        data.password
+      )
+
+      setUser({ email: user.email, id: user.id, name: user.name })
+      navigate('/')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -81,6 +103,7 @@ const SignUpPage = () => {
                   <>
                     <InputText
                       id="firstName"
+                      className="w-full"
                       {...field}
                       invalid={!!fieldState.error}
                     />
@@ -106,6 +129,7 @@ const SignUpPage = () => {
                   <>
                     <InputText
                       id="lastName"
+                      className="w-full"
                       {...field}
                       invalid={!!fieldState.error}
                     />
@@ -197,7 +221,12 @@ const SignUpPage = () => {
         </div>
 
         <div className="mt-8">
-          <Button label="Crear cuenta" type="submit" className="w-full" />
+          <Button
+            loading={loading}
+            label="Crear cuenta"
+            type="submit"
+            className="w-full"
+          />
         </div>
         <div className="mt-4">
           <p className="text-center">
