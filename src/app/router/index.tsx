@@ -1,9 +1,10 @@
-import { createBrowserRouter, Navigate } from 'react-router'
+import { createBrowserRouter } from 'react-router'
 import DashboardLayout from '../layout/DashboardLayout'
 import FindYourParkPage from '../features/parking/pages/FindYourParkPage'
 import MyReservationsPage from '../features/reservations/pages/MyReservationsPage'
 import MyParkingsPage from '../features/parking/pages/MyParkingsPage'
 import NotFoundPage from '../shared/page/NotFoundPage'
+import ParkingDetailPage from '../features/parking/pages/ParkingDetailPage'
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +13,16 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/find-your-parking',
-        Component: FindYourParkPage,
+        children: [
+          {
+            path: '',
+            Component: FindYourParkPage,
+          },
+          {
+            path: ':id',
+            Component: ParkingDetailPage,
+          },
+        ],
       },
       {
         path: '/my-reservations',

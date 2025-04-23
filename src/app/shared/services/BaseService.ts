@@ -15,15 +15,21 @@ class BaseService<T> {
         Accept: 'application/json',
       },
     })
-
-    console.log(this.http)
   }
 
   public async getAll(): Promise<T[]> {
     try {
-      console.log('DEBUG', this.baseUrl)
-
       const response = await this.http.get<T[]>(this.baseUrl)
+      return response.data
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      throw error
+    }
+  }
+
+  public async getById(id: string | number): Promise<T> {
+    try {
+      const response = await this.http.get<T>(`${this.baseUrl}/${id}`)
       return response.data
     } catch (error) {
       console.error('Error fetching data:', error)
