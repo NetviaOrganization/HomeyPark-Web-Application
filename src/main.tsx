@@ -7,8 +7,6 @@ import { router } from './app/router/index.tsx'
 import { APIProvider } from '@vis.gl/react-google-maps'
 import { env } from './env/index.ts'
 
-// console.log('ENV', env.googleMaps.apiKey)
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <APIProvider apiKey={env.googleMaps.apiKey}>
