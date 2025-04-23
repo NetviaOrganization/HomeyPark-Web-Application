@@ -3,6 +3,7 @@ import { Map, Marker } from '@vis.gl/react-google-maps'
 import { useGeolocation } from '../../../shared/hooks/useGeolocation'
 import { usePromise } from '@/app/shared/hooks/usePromise'
 import ParkingService from '../services/ParkingService'
+import { useNavigate } from 'react-router'
 
 const DEFAULT_LOCATION = {
   latitude: -12.092446,
@@ -13,10 +14,14 @@ const parkingService = new ParkingService()
 
 const FindYourParkPage = () => {
   const { latitude, longitude, loading, error } = useGeolocation()
-
   const { data: parkingList, loading: parkingLoading } = usePromise(
     parkingService.getAll()
   )
+  const navigate = useNavigate()
+
+  const handleGoToDetail = (parkingId: number) => {
+    navigate(`/find-your-parking/${parkingId}`)
+  }
 
   return (
     <BasePage>
@@ -52,6 +57,7 @@ const FindYourParkPage = () => {
                   lat: parking.location.latitude,
                   lng: parking.location.longitude,
                 }}
+                onClick={() => handleGoToDetail(parking.id)}
               />
             ))}
         </Map>
