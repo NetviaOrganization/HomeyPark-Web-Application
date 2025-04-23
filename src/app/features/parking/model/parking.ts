@@ -34,3 +34,25 @@ export type User = {
   vehicles: any[] // You might want to define a Vehicle type later
   cards: any[] // You might want to define a Card type later
 }
+
+export type UpdateParkingDto = {
+  width: number
+  length: number
+  height: number
+  price: number
+  phone: string
+  space: number
+  description: string
+  address: string
+  numDirection: string
+  street: string
+  district: string
+  city: string
+  coordinates: string
+  latitude: number
+  longitude: number
+}
+
+export type CreateParkingDto = UpdateParkingDto & {
+  userId: number
+}

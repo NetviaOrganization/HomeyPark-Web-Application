@@ -4,11 +4,15 @@ import { InputText } from 'primereact/inputtext'
 
 interface AutocompleteAddressProps {
   onChangedPlace?: (place: google.maps.places.PlaceResult) => void
+  defaultValue?: string
 }
 
-const AutocompleteAddress = ({ onChangedPlace }: AutocompleteAddressProps) => {
+const AutocompleteAddress = ({
+  onChangedPlace,
+  defaultValue,
+}: AutocompleteAddressProps) => {
   const placesLib = useMapsLibrary('places')
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState(defaultValue ?? '')
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -41,7 +45,7 @@ const AutocompleteAddress = ({ onChangedPlace }: AutocompleteAddressProps) => {
       ref={inputRef}
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
-      placeholder="Search for an address"
+      placeholder="Avenida Alfredo Benavides 2310, Miraflores, Lima"
       className="w-full"
     />
   )

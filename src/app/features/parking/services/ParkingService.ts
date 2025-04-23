@@ -1,5 +1,5 @@
 import BaseService from '@/app/shared/services/BaseService'
-import { Parking } from '../model/parking'
+import { CreateParkingDto, Parking, UpdateParkingDto } from '../model/parking'
 
 class ParkingService extends BaseService<Parking> {
   constructor() {
@@ -39,6 +39,29 @@ class ParkingService extends BaseService<Parking> {
       return response.data
     } catch (error) {
       console.error('Error fetching data:', error)
+      throw error
+    }
+  }
+
+  public async updateParking(
+    id: number,
+    parking: UpdateParkingDto
+  ): Promise<void> {
+    try {
+      await this.http.put<Parking>(`${this.baseUrl}/${id}`, parking)
+      // return response.data
+    } catch (error) {
+      console.error('Error updating data:', error)
+      throw error
+    }
+  }
+
+  public async createParking(parking: CreateParkingDto): Promise<void> {
+    try {
+      await this.http.post<Parking>(this.baseUrl, parking)
+      // return response.data
+    } catch (error) {
+      console.error('Error updating data:', error)
       throw error
     }
   }
