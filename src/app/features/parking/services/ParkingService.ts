@@ -18,6 +18,18 @@ class ParkingService extends BaseService<Parking> {
       throw error
     }
   }
+
+  public async getNearbyByLocation(lat: number, lng: number) {
+    try {
+      const response = await this.http.get<Parking[]>(
+        `${this.baseUrl}/nearby?lat=${lat}&lng=${lng}`
+      )
+      return response.data
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      throw error
+    }
+  }
 }
 
 export default ParkingService

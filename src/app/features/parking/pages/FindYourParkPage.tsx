@@ -6,6 +6,8 @@ import ParkingService from '../services/ParkingService'
 import { useNavigate } from 'react-router'
 import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
 import Title from '@/app/shared/components/Title'
+import { Fragment } from 'react/jsx-runtime'
+import NearbyParkings from '../components/NearbyParkings'
 
 const DEFAULT_LOCATION = {
   latitude: -12.092446,
@@ -15,13 +17,12 @@ const DEFAULT_LOCATION = {
 const parkingService = new ParkingService()
 
 const FindYourParkPage = () => {
+  const navigate = useNavigate()
   const { latitude, longitude, loading, error } = useGeolocation()
   const map = useMap('find-park-map')
-
   const { data: parkingList, loading: parkingLoading } = usePromise(
     parkingService.getAll()
   )
-  const navigate = useNavigate()
 
   const handleGoToDetail = (parkingId: number) => {
     navigate(`/find-your-parking/${parkingId}`)
@@ -43,45 +44,50 @@ const FindYourParkPage = () => {
         <Title className="mb-4">Encuentra tu garage</Title>
         <AutocompleteAddress onChangedPlace={handleChangedPlace} />
       </div>
-      {!loading && (
-        <Map
-          id="find-park-map"
-          className="w-full h-full rounded-lg overflow-hidden"
-          defaultCenter={{
-            lat: latitude ?? DEFAULT_LOCATION.latitude,
-            lng: longitude ?? DEFAULT_LOCATION.longitude,
-          }}
-          defaultZoom={15}
-          gestureHandling="greedy"
-          disableDefaultUI
-        >
-          {!error && (
-            <Marker
-              position={{ lat: latitude!, lng: longitude! }}
-              icon={{
-                path: google.maps.SymbolPath.CIRCLE,
-                fillColor: '#00FF00',
-                fillOpacity: 1,
-                strokeColor: '#008800',
-                strokeWeight: 2,
-                scale: 8,
+      <div className="w-full h-full relative">
+        {!loading && (
+          <Fragment>
+            <Map
+              id="find-park-map"
+              className="w-full h-full rounded-lg overflow-hidden"
+              defaultCenter={{
+                lat: latitude ?? DEFAULT_LOCATION.latitude,
+                lng: longitude ?? DEFAULT_LOCATION.longitude,
               }}
-            />
-          )}
+              defaultZoom={15}
+              gestureHandling="greedy"
+              disableDefaultUI
+            >
+              {!error && (
+                <Marker
+                  position={{ lat: latitude!, lng: longitude! }}
+                  icon={{
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#00FF00',
+                    fillOpacity: 1,
+                    strokeColor: '#008800',
+                    strokeWeight: 2,
+                    scale: 8,
+                  }}
+                />
+              )}
 
-          {!parkingLoading &&
-            parkingList?.map((parking) => (
-              <Marker
-                key={parking.id}
-                position={{
-                  lat: parking.location.latitude,
-                  lng: parking.location.longitude,
-                }}
-                onClick={() => handleGoToDetail(parking.id)}
-              />
-            ))}
-        </Map>
-      )}
+              {!parkingLoading &&
+                parkingList?.map((parking) => (
+                  <Marker
+                    key={parking.id}
+                    position={{
+                      lat: parking.location.latitude,
+                      lng: parking.location.longitude,
+                    }}
+                    onClick={() => handleGoToDetail(parking.id)}
+                  />
+                ))}
+            </Map>
+            {!error && <NearbyParkings lat={latitude!} lng={longitude!} />}
+          </Fragment>
+        )}
+      </div>
     </BasePage>
   )
 }
