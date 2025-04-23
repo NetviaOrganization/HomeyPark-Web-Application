@@ -6,14 +6,17 @@ import './index.css'
 import { RouterProvider } from 'react-router'
 import { router } from './app/router/index.tsx'
 import { APIProvider } from '@vis.gl/react-google-maps'
+import { GoogleReCaptchaProvider } from '@google-recaptcha/react'
 import { env } from './env/index.ts'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <APIProvider apiKey={env.googleMaps.apiKey}>
-      <PrimeReactProvider>
-        <RouterProvider router={router} />
-      </PrimeReactProvider>
-    </APIProvider>
+    <GoogleReCaptchaProvider type="v2-checkbox" siteKey={env.google.siteKey}>
+      <APIProvider apiKey={env.google.apiKey}>
+        <PrimeReactProvider>
+          <RouterProvider router={router} />
+        </PrimeReactProvider>
+      </APIProvider>
+    </GoogleReCaptchaProvider>
   </StrictMode>
 )

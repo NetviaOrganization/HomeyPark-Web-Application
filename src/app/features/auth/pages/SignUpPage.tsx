@@ -6,6 +6,7 @@ import { Password } from 'primereact/password'
 import { Link } from 'react-router'
 import AuthTemplate from '../template/AuthTemplate'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
+import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
 
 const SignUpPage = () => {
   const defaultValues = {
@@ -14,15 +15,18 @@ const SignUpPage = () => {
     lastName: '',
     password: '',
     repeatPassword: '',
+    captcha: false,
   }
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues,
     shouldFocusError: true,
   })
 
   const onSubmit = (data: typeof defaultValues) => {
-    console.log(data)
+    if (!data.captcha) return
+
+    console.log('DATA', data)
   }
 
   return (
@@ -183,6 +187,13 @@ const SignUpPage = () => {
               </div>
             </div>
           </div>
+
+          <GoogleReCaptchaCheckbox
+            size="normal"
+            onChange={(token) => {
+              setValue('captcha', !!token)
+            }}
+          />
         </div>
 
         <div className="mt-8">

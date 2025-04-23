@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@google-recaptcha/react':
+        specifier: ^2.2.0
+        version: 2.2.0(@types/react@19.1.2)(react@19.1.0)
       '@radix-ui/react-slot':
         specifier: ^1.2.0
         version: 1.2.0(@types/react@19.1.2)(react@19.1.0)
@@ -386,6 +389,18 @@ packages:
   '@eslint/plugin-kit@0.2.8':
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@google-recaptcha/core@1.1.0':
+    resolution: {integrity: sha512-9ENDs4gCdNUyuhGb3O6EBKmRUn8TVa1uigZcTW58VSjwzv+KHyO93ZC4O39y70oBTkm+1LJTbSHluUcVqDib1Q==}
+
+  '@google-recaptcha/react@2.2.0':
+    resolution: {integrity: sha512-xsD2GNTJUgWp6+bztAxtYik0wKkh/Ly08VwwmV70F6QhutJ3OfiCCJC9kxpUp+fAudTUi11WeaOBrcFGU8zjpQ==}
+    peerDependencies:
+      '@types/react': ^17 || ^18|| ^19
+      react: ^17 || ^18 || ^19
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2034,6 +2049,15 @@ snapshots:
     dependencies:
       '@eslint/core': 0.13.0
       levn: 0.4.1
+
+  '@google-recaptcha/core@1.1.0': {}
+
+  '@google-recaptcha/react@2.2.0(@types/react@19.1.2)(react@19.1.0)':
+    dependencies:
+      '@google-recaptcha/core': 1.1.0
+      react: 19.1.0
+    optionalDependencies:
+      '@types/react': 19.1.2
 
   '@humanfs/core@0.19.1': {}
 
