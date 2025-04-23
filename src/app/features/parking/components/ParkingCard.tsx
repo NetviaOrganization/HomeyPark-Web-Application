@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { Parking } from '../model/parking'
 import { env } from '@/env'
-import Markdown from 'react-markdown'
 import { Button } from 'primereact/button'
 
 const ParkingCard: FC<Props> = ({ parking, onEdit, onDelete }) => {
@@ -26,9 +25,7 @@ const ParkingCard: FC<Props> = ({ parking, onEdit, onDelete }) => {
         </p>
 
         {/* <p className=''></p> */}
-        <div className="mt-2 text-xs line-clamp-2">
-          <Markdown>{parking.description}</Markdown>
-        </div>
+        <div className="mt-2 text-xs line-clamp-2">{parking.description}</div>
 
         <div className="flex gap-2 mt-auto pt-4">
           <Button

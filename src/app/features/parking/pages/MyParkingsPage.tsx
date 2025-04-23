@@ -6,6 +6,7 @@ import { useUser } from '../../auth/context/UserContext'
 import ParkingCard from '../components/ParkingCard'
 import { createUseStyles } from 'react-jss'
 import { useNavigate } from 'react-router'
+import { Button } from 'primereact/button'
 
 const parkingService = new ParkingService()
 
@@ -29,6 +30,15 @@ const MyParkingsPage = () => {
   return (
     <BasePage>
       <Title>Mis estacionamientos guardados</Title>
+
+      <div className="flex justify-end">
+        <Button
+          label="Agregar"
+          size="small"
+          icon="pi pi-plus"
+          onClick={() => navigate('create')}
+        />
+      </div>
 
       <div className="mt-6">
         {loading ? (
