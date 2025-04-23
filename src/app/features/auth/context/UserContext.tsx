@@ -18,6 +18,7 @@ interface UserContextType {
   user: User | null
   setUser: (user: User | null) => void
   isAuthenticated: boolean
+  logout: () => void
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -40,10 +41,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setStoredUser(newUser)
   }
 
+  const logout = () => {
+    setUser(null)
+    setStoredUser(null)
+  }
+
   const value = {
     user,
     setUser: handleSetUser,
     isAuthenticated: !!user,
+    logout,
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

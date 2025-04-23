@@ -1,9 +1,15 @@
+import { useUser } from '@/app/features/auth/context/UserContext'
+import { Button } from 'primereact/button'
 import { Menu } from 'primereact/menu'
 import { MenuItem } from 'primereact/menuitem'
 import { classNames } from 'primereact/utils'
-import { NavLink } from 'react-router-dom' // Fix the import
+import { NavLink } from 'react-router-dom'
+
+import logo from '@/assets/logo.png'
 
 const Sidebar = () => {
+  const { user, logout } = useUser()
+
   const items: MenuItem[] = [
     {
       label: 'Explora',
@@ -78,8 +84,32 @@ const Sidebar = () => {
   ]
 
   return (
-    <div className="max-w-72 w-full border-r-slate-100 border-r px-6 py-6 flex flex-col">
+    <div className="max-w-80 w-full border-r-slate-100 border-r px-6 py-6 flex flex-col">
+      <div className="w-40 mx-auto mb-4">
+        <img className="w-full" src={logo} alt="HomeyPark Logo" />
+      </div>
       <Menu model={items} className="w-full text-sm" />
+      <div className="h-full"></div>
+
+      <div className="border border-slate-100 rounded-lg p-4">
+        <div className="flex gap-4 items-center">
+          <div className="shrink-0">
+            <i className="pi pi-user"></i>
+          </div>
+          <div className="w-full">
+            <p className="text-lg font-semibold">{user?.name}</p>
+            <p className="text-sm">{user?.email}</p>
+          </div>
+          <div className="shrink-0">
+            <Button
+              text
+              icon="pi pi-sign-out"
+              severity="danger"
+              onClick={logout}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
