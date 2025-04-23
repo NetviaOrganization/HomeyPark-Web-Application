@@ -13,7 +13,7 @@ const Sidebar = () => {
           template: (item) => (
             <NavLink
               className={({ isActive }) =>
-                classNames('px-5 py-3 block w-full', {
+                classNames('px-5 py-3 block w-full text-sm', {
                   'bg-gray-100': isActive,
                 })
               }
@@ -28,7 +28,7 @@ const Sidebar = () => {
           template: (item) => (
             <NavLink
               className={({ isActive }) =>
-                classNames('px-5 py-3 block w-full', {
+                classNames('px-5 py-3 block w-full text-sm', {
                   'bg-gray-100': isActive,
                 })
               }
@@ -49,7 +49,7 @@ const Sidebar = () => {
             <NavLink
               to="/my-garages"
               className={({ isActive }) =>
-                classNames('px-5 py-3 block w-full', {
+                classNames('px-5 py-3 block w-full text-sm', {
                   'bg-gray-100': isActive,
                 })
               }
@@ -64,7 +64,7 @@ const Sidebar = () => {
             <NavLink
               to="/incoming-reservations"
               className={({ isActive }) =>
-                classNames('px-5 py-3 block w-full', {
+                classNames('px-5 py-3 block w-full text-sm', {
                   'bg-gray-100': isActive,
                 })
               }
@@ -79,7 +79,7 @@ const Sidebar = () => {
 
   return (
     <div className="max-w-72 w-full border-r-slate-100 border-r px-6 py-6 flex flex-col">
-      <Menu model={items} className="w-full" />
+      <Menu model={items} className="w-full text-sm" />
     </div>
   )
 }

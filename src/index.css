@@ -7,7 +7,11 @@
 @import 'tailwindcss/utilities' layer(utilities);
 
 /* @plugin "@tailwindcss/typography"; */
-
+/* 
 html {
-  font-size: 14px;
+  font-size: 16px;
+} */
+
+body {
+  @apply text-gray-600;
 }

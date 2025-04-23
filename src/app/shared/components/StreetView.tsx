@@ -1,10 +1,12 @@
 import {
   useEffect,
-  useImperativeHandle,
   useRef,
-  forwardRef,
   CSSProperties,
+  FC,
+  useImperativeHandle,
+  RefObject,
 } from 'react'
+import { useApiIsLoaded } from '@vis.gl/react-google-maps'
 
 interface StreetViewProps
   extends Omit<google.maps.StreetViewPanoramaOptions, 'position'> {
@@ -12,47 +14,55 @@ interface StreetViewProps
   lng: number
   className?: string
   style?: CSSProperties
+  ref?: RefObject<StreetViewHandle | null>
 }
 
 export interface StreetViewHandle {
   panorama: google.maps.StreetViewPanorama | null
 }
 
-const StreetView = forwardRef<StreetViewHandle, StreetViewProps>(
-  ({ lat, lng, className, style, ...options }, ref) => {
-    const panoRef = useRef<HTMLDivElement>(null)
-    const panoramaRef = useRef<google.maps.StreetViewPanorama | null>(null)
+const StreetView: FC<StreetViewProps> = ({
+  lat,
+  lng,
+  className,
+  style,
+  ref,
+  ...options
+}) => {
+  const panoRef = useRef<HTMLDivElement>(null)
+  const panoramaRef = useRef<google.maps.StreetViewPanorama | null>(null)
+  const loaded = useApiIsLoaded()
 
-    useEffect(() => {
-      if (panoRef.current) {
-        const position = { lat, lng }
+  useEffect(() => {
+    if (!loaded) return
 
-        const panorama = new google.maps.StreetViewPanorama(panoRef.current, {
-          position,
-          ...options,
-        })
+    if (panoRef.current) {
+      const position = { lat, lng }
 
-        panoramaRef.current = panorama
-      }
+      const panorama = new google.maps.StreetViewPanorama(panoRef.current, {
+        position,
+        ...options,
+      })
 
-      return () => {
-        panoramaRef.current = null
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lat, lng, ...Object.values(options)])
+      panoramaRef.current = panorama
+    }
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        panorama: panoramaRef.current,
-      }),
-      []
-    )
+    return () => {
+      panoramaRef.current = null
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded, lat, lng, ...Object.values(options)])
 
-    return <div className={className} style={style} ref={panoRef} />
-  }
-)
+  useImperativeHandle(
+    ref,
+    () => ({
+      panorama: panoramaRef.current,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [loaded]
+  )
 
-StreetView.displayName = 'StreetView'
+  return <div className={className} style={style} ref={panoRef} />
+}
 
 export default StreetView

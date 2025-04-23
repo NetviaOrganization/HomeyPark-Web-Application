@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { PrimeReactProvider } from 'primereact/api'
+import 'primeicons/primeicons.css'
 import './index.css'
 import { RouterProvider } from 'react-router'
 import { router } from './app/router/index.tsx'
