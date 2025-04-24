@@ -116,8 +116,6 @@ const CreateEditParkingPage = () => {
   }
 
   const handleChangedPlace = (place: google.maps.places.PlaceResult) => {
-    console.log('place geometry', place.geometry?.location?.lat())
-
     if (place.geometry?.location) {
       const lat = place.geometry.location.lat()
       const lng = place.geometry.location.lng()
@@ -326,7 +324,7 @@ const CreateEditParkingPage = () => {
                   <InputTextarea
                     {...field}
                     rows={5}
-                    className="w-full"
+                    className="w-full text-sm"
                     invalid={!!fieldState.error}
                   />
                   {!!fieldState.error && (
@@ -342,6 +340,7 @@ const CreateEditParkingPage = () => {
 
         <div className="flex justify-end gap-4 mt-8">
           <Button
+            type="button"
             label="Cancelar"
             size="small"
             severity="danger"
