@@ -1,11 +1,5 @@
 import useLocalStorage from '@/app/shared/hooks/useLocalStorage'
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useState,
-  useEffect,
-} from 'react'
+import { createContext, useContext, ReactNode, useState } from 'react'
 
 interface User {
   id?: number
