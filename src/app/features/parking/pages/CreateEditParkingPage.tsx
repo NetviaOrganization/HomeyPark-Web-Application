@@ -8,6 +8,7 @@ import { usePromise } from '@/app/shared/hooks/usePromise'
 import { Controller, useForm } from 'react-hook-form'
 import Title from '@/app/shared/components/Title'
 import { Divider } from 'primereact/divider'
+import { Editor } from 'primereact/editor'
 import { InputNumber } from 'primereact/inputnumber'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
@@ -67,11 +68,14 @@ const CreateEditParkingPage = () => {
     isEditMode ? parkingService.getById(id!) : null
   )
   const [sendLoading, setSendLoading] = useState(false)
-  const { control, handleSubmit, setValue } = useForm({
+  const { control, handleSubmit, setValue, watch } = useForm({
     defaultValues,
     mode: 'onBlur',
     values: initialParking ? mapAddressToForm(initialParking) : undefined,
   })
+
+  const position = watch('position')
+
   const isLoaded = useApiIsLoaded()
   const map = useMap('create-edit-park-map')
 
@@ -125,13 +129,15 @@ const CreateEditParkingPage = () => {
   }
 
   const handleChangedPlace = (place: google.maps.places.PlaceResult) => {
-    console.log(place)
+    console.log('place geometry', place.geometry?.location?.lat())
 
     if (place.geometry?.location) {
       const lat = place.geometry.location.lat()
       const lng = place.geometry.location.lng()
 
-      map?.setCenter({ lat, lng })
+      console.log(place.geometry.location)
+
+      map?.panTo({ lat, lng })
       map?.setZoom(15)
       setValue('position.latitude', lat)
       setValue('position.longitude', lng)
@@ -177,8 +183,8 @@ const CreateEditParkingPage = () => {
       >
         <div>
           <Title level="h4">Ubicación</Title>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="address" className="text-sm font-medium">
+          <div className="flex flex-col gap-1 mt-2">
+            <label htmlFor="address" className="text-xs font-medium">
               Dirección
             </label>
             {!loading && (
@@ -193,43 +199,37 @@ const CreateEditParkingPage = () => {
 
           <div className="aspect-[16/6] mt-6">
             {isLoaded && !loading && (
-              <Controller
-                control={control}
-                name="position"
-                render={({ field }) => (
-                  <Map
-                    id="create-edit-park-map"
-                    className="w-full h-full rounded-lg overflow-hidden"
-                    defaultCenter={{
-                      lat: field.value.latitude ?? DEFAULT_LOCATION.latitude,
-                      lng: field.value.longitude ?? DEFAULT_LOCATION.longitude,
-                    }}
-                    defaultZoom={15}
-                    gestureHandling="greedy"
-                    disableDefaultUI
-                  >
-                    <Marker
-                      position={{
-                        lat: field.value.latitude,
-                        lng: field.value.longitude,
-                      }}
-                      icon={{
-                        path: google.maps.SymbolPath.CIRCLE,
-                        fillColor: '#00FF00',
-                        fillOpacity: 1,
-                        strokeColor: '#008800',
-                        strokeWeight: 2,
-                        scale: 8,
-                      }}
-                    />
-                  </Map>
-                )}
-              />
+              <Map
+                id="create-edit-park-map"
+                className="w-full h-full rounded-lg overflow-hidden"
+                center={{
+                  lat: position.latitude ?? DEFAULT_LOCATION.latitude,
+                  lng: position.longitude ?? DEFAULT_LOCATION.longitude,
+                }}
+                defaultZoom={15}
+                gestureHandling="greedy"
+                disableDefaultUI
+              >
+                <Marker
+                  position={{
+                    lat: position.latitude,
+                    lng: position.longitude,
+                  }}
+                  icon={{
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#00FF00',
+                    fillOpacity: 1,
+                    strokeColor: '#008800',
+                    strokeWeight: 2,
+                    scale: 8,
+                  }}
+                />
+              </Map>
             )}
           </div>
           <Divider />
           <Title level="h4">Dimensiones</Title>
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-2">
             <Controller
               control={control}
               name="space"
@@ -237,8 +237,8 @@ const CreateEditParkingPage = () => {
                 required: { value: true, message: REQUIRED_INPUT_ERROR },
               }}
               render={({ field: { onChange, value, ...field } }) => (
-                <div className="flex flex-col gap-2 w-full">
-                  <label htmlFor="space" className="text-sm font-medium">
+                <div className="flex flex-col gap-1 w-full">
+                  <label htmlFor="space" className="text-xs font-medium">
                     Espacios disponibles
                   </label>
                   <InputNumber
@@ -260,8 +260,8 @@ const CreateEditParkingPage = () => {
                 required: { value: true, message: REQUIRED_INPUT_ERROR },
               }}
               render={({ field: { onChange, value, ...field } }) => (
-                <div className="flex flex-col gap-2 w-full grow">
-                  <label htmlFor="width" className="text-sm font-medium">
+                <div className="flex flex-col gap-1 w-full grow">
+                  <label htmlFor="width" className="text-xs font-medium">
                     Ancho (m)
                   </label>
                   <InputNumber
@@ -283,8 +283,8 @@ const CreateEditParkingPage = () => {
                 required: { value: true, message: REQUIRED_INPUT_ERROR },
               }}
               render={({ field: { onChange, value, ...field } }) => (
-                <div className="flex flex-col gap-2 w-full grow">
-                  <label htmlFor="length" className="text-sm font-medium">
+                <div className="flex flex-col gap-1 w-full grow">
+                  <label htmlFor="length" className="text-xs font-medium">
                     Largo (m)
                   </label>
                   <InputNumber
@@ -306,8 +306,8 @@ const CreateEditParkingPage = () => {
                 required: { value: true, message: REQUIRED_INPUT_ERROR },
               }}
               render={({ field: { onChange, value, ...field } }) => (
-                <div className="flex flex-col gap-2 w-full">
-                  <label htmlFor="height" className="text-sm font-medium">
+                <div className="flex flex-col gap-1 w-full">
+                  <label htmlFor="height" className="text-xs font-medium">
                     Alto (m)
                   </label>
                   <InputNumber
@@ -322,6 +322,10 @@ const CreateEditParkingPage = () => {
               )}
             />
           </div>
+
+          <Title level="h4" className="mt-4">
+            Descripción
+          </Title>
         </div>
 
         <div className="flex justify-end gap-4 mt-8">

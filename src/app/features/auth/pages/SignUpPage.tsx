@@ -61,8 +61,10 @@ const SignUpPage = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="email">Email</label>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
             <Controller
               name="email"
               rules={{
@@ -91,8 +93,10 @@ const SignUpPage = () => {
           </div>
 
           <div className="flex gap-4 w-full">
-            <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="firstName">Nombres</label>
+            <div className="flex flex-col gap-1 w-full">
+              <label htmlFor="firstName" className="text-sm font-medium">
+                Nombres
+              </label>
               <Controller
                 name="firstName"
                 rules={{
@@ -117,8 +121,10 @@ const SignUpPage = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="email">Apellidos</label>
+            <div className="flex flex-col gap-1 w-full">
+              <label htmlFor="email" className="text-sm font-medium">
+                Apellidos
+              </label>
               <Controller
                 name="lastName"
                 rules={{
@@ -145,9 +151,11 @@ const SignUpPage = () => {
           </div>
 
           <div className="flex gap-4 w-full">
-            <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="email">Contraseña</label>
-              <div className="flex justify-center w-full">
+            <div className="flex flex-col gap-1 w-full">
+              <label htmlFor="email" className="text-sm font-medium">
+                Contraseña
+              </label>
+              <div className="flex w-full">
                 <Controller
                   name="password"
                   control={control}
@@ -155,7 +163,7 @@ const SignUpPage = () => {
                     required: { value: true, message: REQUIRED_INPUT_ERROR },
                   }}
                   render={({ field, fieldState }) => (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1 w-full">
                       <Password
                         id="password"
                         feedback={false}
@@ -178,8 +186,10 @@ const SignUpPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="email">Repetir contraseña</label>
+            <div className="flex flex-col gap-1 w-full">
+              <label htmlFor="email" className="text-sm font-medium">
+                Repetir contraseña
+              </label>
               <div className="flex justify-center w-full">
                 <Controller
                   name="repeatPassword"
@@ -188,7 +198,7 @@ const SignUpPage = () => {
                   }}
                   control={control}
                   render={({ field, fieldState }) => (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1 w-full">
                       <Password
                         id="repeatPassword"
                         feedback={false}
@@ -212,12 +222,14 @@ const SignUpPage = () => {
             </div>
           </div>
 
-          <GoogleReCaptchaCheckbox
-            size="normal"
-            onChange={(token) => {
-              setValue('captcha', !!token)
-            }}
-          />
+          <div className="mt-2">
+            <GoogleReCaptchaCheckbox
+              size="normal"
+              onChange={(token) => {
+                setValue('captcha', !!token)
+              }}
+            />
+          </div>
         </div>
 
         <div className="mt-8">
@@ -229,7 +241,7 @@ const SignUpPage = () => {
           />
         </div>
         <div className="mt-4">
-          <p className="text-center">
+          <p className="text-center text-sm">
             ¿Ya tienes una cuenta?{' '}
             <Link to="/login" className="text-[var(--primary-color)] underline">
               Inicia sesión

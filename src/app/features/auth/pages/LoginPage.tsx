@@ -49,10 +49,12 @@ const LoginPage = () => {
         Ingresa a tu cuenta y empieza a reservas estacionamientos.
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="email">Email</label>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
             <Controller
               name="email"
               rules={{
@@ -80,8 +82,10 @@ const LoginPage = () => {
             />
           </div>
 
-          <div className="flex flex-col gap-2 w-full">
-            <label htmlFor="email">Contraseña</label>
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="email" className="text-sm font-medium">
+              Contraseña
+            </label>
             <div className="flex w-full">
               <Controller
                 name="password"
@@ -113,12 +117,14 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <GoogleReCaptchaCheckbox
-            size="normal"
-            onChange={(token) => {
-              setValue('captcha', !!token)
-            }}
-          />
+          <div className="mt-2">
+            <GoogleReCaptchaCheckbox
+              size="normal"
+              onChange={(token) => {
+                setValue('captcha', !!token)
+              }}
+            />
+          </div>
         </div>
         <div className="mt-8">
           <Button
@@ -129,7 +135,7 @@ const LoginPage = () => {
           />
         </div>
         <div className="mt-4">
-          <p className="text-center">
+          <p className="text-center text-sm">
             ¿No tienes una cuenta?{' '}
             <Link
               to="/signup"

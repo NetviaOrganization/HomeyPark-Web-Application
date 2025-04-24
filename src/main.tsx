@@ -15,7 +15,19 @@ createRoot(document.getElementById('root')!).render(
     <UserProvider>
       <GoogleReCaptchaProvider type="v2-checkbox" siteKey={env.google.siteKey}>
         <APIProvider apiKey={env.google.apiKey}>
-          <PrimeReactProvider>
+          <PrimeReactProvider
+            value={{
+              ripple: true,
+              pt: {
+                inputtext: {
+                  root: { className: 'text-sm p-inputtext-sm' },
+                },
+                button: {
+                  root: { className: 'text-sm' },
+                },
+              },
+            }}
+          >
             <RouterProvider router={router} />
           </PrimeReactProvider>
         </APIProvider>

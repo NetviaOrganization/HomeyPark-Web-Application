@@ -16,16 +16,16 @@ const ParkingCard: FC<Props> = ({ parking, onEdit, onDelete }) => {
         />
       </div>
 
-      <div className="p-6">
-        <p className="font-medium">
+      <div className="p-6 flex flex-col h-full">
+        <p className="font-bold text-sm">
           {address} {numDirection}
         </p>
-        <p className="text-sm">
+        <p className="text-sm font-medium">
           {street}, {city}
         </p>
 
         {/* <p className=''></p> */}
-        <div className="mt-2 text-xs line-clamp-2">{parking.description}</div>
+        <div className="mt-2 text-sm line-clamp-2">{parking.description}</div>
 
         <div className="flex gap-2 mt-auto pt-4">
           <Button
