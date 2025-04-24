@@ -1,7 +1,7 @@
 import Title from '@/app/shared/components/Title'
 import { usePromise } from '@/app/shared/hooks/usePromise'
 import BasePage from '@/app/shared/page/BasePage'
-import ParkingService from '../services/parkingService'
+import ParkingService from '../services/ParkingService'
 import { useUser } from '../../auth/context/UserContext'
 import ParkingCard from '../components/ParkingCard'
 import { createUseStyles } from 'react-jss'
@@ -91,6 +91,7 @@ const MyParkingsPage = () => {
           <div className={classes.cardList}>
             {parkingList.map((parking) => (
               <ParkingCard
+                key={parking.id}
                 parking={parking}
                 onEdit={() => navigate(`edit/${parking.id}`)}
                 onDelete={() => handleDeleteParking(parking.id)}

@@ -18,8 +18,8 @@ export const router = createBrowserRouter([
   { path: '/signup', element: <SignupRedirect /> },
   {
     path: '/',
-    // element: <ProtectedRoute />,
-    Component: ProtectedRoute,
+    element: <ProtectedRoute />,
+    // Component: ProtectedRoute,
     children: [
       {
         path: '/find-your-parking',

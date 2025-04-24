@@ -24,17 +24,11 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined)
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
   const [storedUser, setStoredUser] = useLocalStorage<User | null>(
     'authUser',
     null
   )
-
-  useEffect(() => {
-    if (storedUser) {
-      setUser(storedUser)
-    }
-  }, [storedUser])
+  const [user, setUser] = useState<User | null>(storedUser)
 
   const handleSetUser = (newUser: User | null) => {
     setUser(newUser)
