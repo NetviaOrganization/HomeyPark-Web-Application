@@ -36,6 +36,15 @@ class BaseService<T> {
       throw error
     }
   }
+
+  public async deleteParkingById(id: string | number): Promise<void> {
+    try {
+      await this.http.delete(`${this.baseUrl}/${id}`)
+    } catch (err) {
+      console.error('Error deleting data:', err)
+      throw err
+    }
+  }
 }
 
 export default BaseService

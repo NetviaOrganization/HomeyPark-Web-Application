@@ -23,6 +23,7 @@
     "postcss": "^8.5.3",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.4",
+    "quill": "^2.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.1",

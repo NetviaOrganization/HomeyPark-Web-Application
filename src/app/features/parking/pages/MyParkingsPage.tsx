@@ -7,6 +7,10 @@ import ParkingCard from '../components/ParkingCard'
 import { createUseStyles } from 'react-jss'
 import { useNavigate } from 'react-router'
 import { Button } from 'primereact/button'
+import { useEffect, useRef, useState } from 'react'
+import { Parking } from '../model/parking'
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
+import { Toast } from 'primereact/toast'
 
 const parkingService = new ParkingService()
 
@@ -23,9 +27,47 @@ const MyParkingsPage = () => {
   const navigate = useNavigate()
   const classes = useStyles()
 
+  const [parkingList, setParkingList] = useState<Parking[]>([])
+  const toast = useRef<Toast>(null)
+
   const { data, loading, error } = usePromise(() =>
     parkingService.getAllByUserId(user!.id!)
   )
+
+  useEffect(() => {
+    setParkingList(data || [])
+  }, [data])
+
+  const handleDeleteParking = (id: string | number) => {
+    return new Promise<void>((resolve, reject) => {
+      confirmDialog({
+        message: '¿Estás seguro de que deseas eliminar este estacionamiento?',
+        header: 'Confirmar eliminación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: async () => {
+          try {
+            await parkingService.deleteParkingById(id)
+            setParkingList((prev) =>
+              prev.filter((parking) => parking.id !== id)
+            )
+
+            resolve()
+            toast.current?.show({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Estacionamiento eliminado correctamente',
+            })
+          } catch (error) {
+            console.error('Error deleting parking:', error)
+            reject(error)
+          }
+        },
+        reject: () => {
+          resolve()
+        },
+      })
+    })
+  }
 
   return (
     <BasePage>
@@ -47,15 +89,19 @@ const MyParkingsPage = () => {
           <div>Error</div>
         ) : data?.length ? (
           <div className={classes.cardList}>
-            {data.map((parking) => (
+            {parkingList.map((parking) => (
               <ParkingCard
                 parking={parking}
                 onEdit={() => navigate(`edit/${parking.id}`)}
+                onDelete={() => handleDeleteParking(parking.id)}
               />
             ))}
           </div>
         ) : null}
       </div>
+
+      <ConfirmDialog />
+      <Toast ref={toast} />
     </BasePage>
   )
 }

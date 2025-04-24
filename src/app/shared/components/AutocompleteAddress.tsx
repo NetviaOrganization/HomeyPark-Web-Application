@@ -46,7 +46,7 @@ const AutocompleteAddress = ({
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       placeholder="Avenida Alfredo Benavides 2310, Miraflores, Lima"
-      className="w-full p-inputtext-sm text-xs"
+      className="w-full"
     />
   )
 }

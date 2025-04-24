@@ -16,8 +16,8 @@ const NearbyParkings: FC<Props> = ({ lat, lng }) => {
 
   return (
     <>
-      <div className="absolute z-10 bg-white rounded-lg shadow-lg left-4 right-4 bottom-4 p-6 grid grid-cols-3">
-        {data.map((parking) => (
+      <div className="absolute z-10 bg-white rounded-lg shadow-lg left-4 right-4 bottom-4 p-6 grid grid-cols-4 gap-4">
+        {data.slice(0, 4).map((parking) => (
           <ParkingSummary
             key={parking.id}
             parking={parking}

@@ -8,13 +8,13 @@ import { usePromise } from '@/app/shared/hooks/usePromise'
 import { Controller, useForm } from 'react-hook-form'
 import Title from '@/app/shared/components/Title'
 import { Divider } from 'primereact/divider'
-import { Editor } from 'primereact/editor'
 import { InputNumber } from 'primereact/inputnumber'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
 import { Button } from 'primereact/button'
 import { useState } from 'react'
 import { useUser } from '../../auth/context/UserContext'
+import { InputTextarea } from 'primereact/inputtextarea'
 
 const parkingService = new ParkingService()
 
@@ -33,6 +33,7 @@ const defaultValues = {
   length: 0,
   height: 0,
   space: 0,
+  description: '',
   position: {
     latitude: DEFAULT_LOCATION.latitude,
     longitude: DEFAULT_LOCATION.longitude,
@@ -51,6 +52,7 @@ const mapAddressToForm = (parking: Parking): typeof defaultValues => {
     width: parking.width,
     length: parking.length,
     space: parking.space,
+    description: parking.description,
     position: {
       latitude: parking.location.latitude,
       longitude: parking.location.longitude,
@@ -80,8 +82,6 @@ const CreateEditParkingPage = () => {
   const map = useMap('create-edit-park-map')
 
   const onSubmit = async (data: typeof defaultValues) => {
-    console.log('DATA', data)
-
     setSendLoading(true)
     try {
       const payload: UpdateParkingDto = {
@@ -99,20 +99,7 @@ const CreateEditParkingPage = () => {
         coordinates: `${data.position.latitude},${data.position.longitude}`,
         price: 10,
         phone: '999 999 999',
-        description: `
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores sint,
-          voluptate tempora non laudantium, ut pariatur nam optio nesciunt omnis,
-          labore possimus. Quibusdam vitae dolorem beatae voluptatum minus in,
-          repudiandae enim temporibus repellat, dolores quos omnis facere quo
-          voluptatem cupiditate officiis necessitatibus! Expedita voluptates
-          inventore rem eveniet, enim eaque labore nostrum neque quae, iusto nobis
-          velit similique laboriosam dignissimos voluptas laudantium aperiam,
-          consequatur ex voluptate cum? Ipsum adipisci quas distinctio, sed cumque
-          inventore voluptas dolores assumenda eaque cupiditate dignissimos aperiam
-          dolorem quisquam! Quaerat corrupti nihil magni asperiores quae itaque
-          libero soluta aliquid incidunt reiciendis, veritatis vitae, possimus,
-          porro placeat amet?
-        `,
+        description: data.description,
       }
 
       if (isEditMode) {
@@ -184,7 +171,7 @@ const CreateEditParkingPage = () => {
         <div>
           <Title level="h4">Ubicación</Title>
           <div className="flex flex-col gap-1 mt-2">
-            <label htmlFor="address" className="text-xs font-medium">
+            <label htmlFor="address" className="text-sm font-medium">
               Dirección
             </label>
             {!loading && (
@@ -238,7 +225,7 @@ const CreateEditParkingPage = () => {
               }}
               render={({ field: { onChange, value, ...field } }) => (
                 <div className="flex flex-col gap-1 w-full">
-                  <label htmlFor="space" className="text-xs font-medium">
+                  <label htmlFor="space" className="text-sm font-medium">
                     Espacios disponibles
                   </label>
                   <InputNumber
@@ -261,7 +248,7 @@ const CreateEditParkingPage = () => {
               }}
               render={({ field: { onChange, value, ...field } }) => (
                 <div className="flex flex-col gap-1 w-full grow">
-                  <label htmlFor="width" className="text-xs font-medium">
+                  <label htmlFor="width" className="text-sm font-medium">
                     Ancho (m)
                   </label>
                   <InputNumber
@@ -284,7 +271,7 @@ const CreateEditParkingPage = () => {
               }}
               render={({ field: { onChange, value, ...field } }) => (
                 <div className="flex flex-col gap-1 w-full grow">
-                  <label htmlFor="length" className="text-xs font-medium">
+                  <label htmlFor="length" className="text-sm font-medium">
                     Largo (m)
                   </label>
                   <InputNumber
@@ -307,7 +294,7 @@ const CreateEditParkingPage = () => {
               }}
               render={({ field: { onChange, value, ...field } }) => (
                 <div className="flex flex-col gap-1 w-full">
-                  <label htmlFor="height" className="text-xs font-medium">
+                  <label htmlFor="height" className="text-sm font-medium">
                     Alto (m)
                   </label>
                   <InputNumber
@@ -326,6 +313,31 @@ const CreateEditParkingPage = () => {
           <Title level="h4" className="mt-4">
             Descripción
           </Title>
+
+          <div className="mt-2">
+            <Controller
+              control={control}
+              name="description"
+              rules={{
+                required: { value: true, message: REQUIRED_INPUT_ERROR },
+              }}
+              render={({ field, fieldState }) => (
+                <>
+                  <InputTextarea
+                    {...field}
+                    rows={5}
+                    className="w-full"
+                    invalid={!!fieldState.error}
+                  />
+                  {!!fieldState.error && (
+                    <small className="text-red-500 leading">
+                      {fieldState.error.message}
+                    </small>
+                  )}
+                </>
+              )}
+            />
+          </div>
         </div>
 
         <div className="flex justify-end gap-4 mt-8">

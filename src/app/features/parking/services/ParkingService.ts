@@ -65,6 +65,15 @@ class ParkingService extends BaseService<Parking> {
       throw error
     }
   }
+
+  public async deleteParkingById(id: string | number): Promise<void> {
+    try {
+      await this.http.delete(`${this.baseUrl}/delete/${id}`)
+    } catch (err) {
+      console.error('Error deleting data:', err)
+      throw err
+    }
+  }
 }
 
 export default ParkingService
