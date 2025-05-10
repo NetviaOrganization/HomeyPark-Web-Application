@@ -1,14 +1,15 @@
-import BasePage from '@/app/shared/page/BasePage'
-import { Map, Marker, useMap } from '@vis.gl/react-google-maps'
+import { AdvancedMarker, Map, useMap } from '@vis.gl/react-google-maps'
 import { useGeolocation } from '../../../shared/hooks/useGeolocation'
 import { usePromise } from '@/app/shared/hooks/usePromise'
 import ParkingService from '../services/parkingService'
 import { useNavigate } from 'react-router'
-import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
-import Title from '@/app/shared/components/Title'
 import { Fragment } from 'react/jsx-runtime'
 import NearbyParkings from '../components/NearbyParkings'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import ParkingSummaryAside from '../components/ParkingSummaryAside'
+import { Nullable } from 'primereact/ts-helpers'
+import { Parking } from '../model/parking'
+import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
 
 const DEFAULT_LOCATION = {
   latitude: -12.092446,
@@ -16,23 +17,24 @@ const DEFAULT_LOCATION = {
 }
 
 const parkingService = new ParkingService()
+const MAP_ID = 'find-park-map'
 
 const FindYourParkPage = () => {
   const navigate = useNavigate()
   const { latitude, longitude, loading, error } = useGeolocation()
-  const map = useMap('find-park-map')
-
+  const map = useMap(MAP_ID)
   const { data: parkingList, loading: parkingLoading } = usePromise(() =>
     parkingService.getAll()
   )
+  const [selectedParking, setSelectedParking] =
+    useState<Nullable<Parking>>(null)
 
   useEffect(() => {
     if (latitude && longitude) {
       map?.setCenter({ lat: latitude, lng: longitude })
       map?.setZoom(15)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [latitude, longitude])
+  }, [latitude, longitude, map])
 
   const handleGoToDetail = (parkingId: number) => {
     navigate(`/find-your-parking/${parkingId}`)
@@ -49,56 +51,60 @@ const FindYourParkPage = () => {
   }
 
   return (
-    <BasePage>
-      <div className="mb-6">
-        <Title className="mb-4">Encuentra tu garage</Title>
-        <AutocompleteAddress onChangedPlace={handleChangedPlace} />
-      </div>
-      <div className="w-full h-full relative">
-        <Fragment>
-          <Map
-            id="find-park-map"
-            className="w-full h-full rounded-lg overflow-hidden"
-            defaultCenter={{
-              lat: latitude ?? DEFAULT_LOCATION.latitude,
-              lng: longitude ?? DEFAULT_LOCATION.longitude,
-            }}
-            defaultZoom={15}
-            gestureHandling="greedy"
-            disableDefaultUI
-          >
-            {!loading && !error && (
-              <Marker
-                position={{ lat: latitude!, lng: longitude! }}
-                icon={{
-                  path: google.maps.SymbolPath.CIRCLE,
-                  fillColor: '#00FF00',
-                  fillOpacity: 1,
-                  strokeColor: '#008800',
-                  strokeWeight: 2,
-                  scale: 8,
-                }}
-              />
-            )}
+    <div className="w-full h-full relative overflow-hidden">
+      <Fragment>
+        <Map
+          id={MAP_ID}
+          mapId={MAP_ID}
+          className="w-full h-full rounded-lg overflow-hidden"
+          defaultCenter={{
+            lat: latitude ?? DEFAULT_LOCATION.latitude,
+            lng: longitude ?? DEFAULT_LOCATION.longitude,
+          }}
+          defaultZoom={15}
+          gestureHandling="greedy"
+          disableDefaultUI
+          reuseMaps
+        >
+          <div className="absolute top-6 left-6 max-w-xl w-full">
+            <AutocompleteAddress onChangedPlace={handleChangedPlace} />
+          </div>
 
-            {!parkingLoading &&
-              parkingList?.map((parking) => (
-                <Marker
-                  key={parking.id}
-                  position={{
-                    lat: parking.location.latitude,
-                    lng: parking.location.longitude,
-                  }}
-                  onClick={() => handleGoToDetail(parking.id)}
-                />
-              ))}
-          </Map>
           {!loading && !error && (
-            <NearbyParkings lat={latitude!} lng={longitude!} />
+            <AdvancedMarker
+              position={{ lat: latitude!, lng: longitude! }}
+              zIndex={10}
+            >
+              <div className="w-4 h-4 rounded-full bg-[#4285F4] shadow-[0_0_0_4px_rgba(66,133,244,0.3),0_0_0_8px_rgba(66,133,244,0.15)]" />
+            </AdvancedMarker>
           )}
-        </Fragment>
-      </div>
-    </BasePage>
+
+          {!parkingLoading &&
+            parkingList?.map((parking) => (
+              <AdvancedMarker
+                key={parking.id}
+                position={{
+                  lat: parking.location.latitude,
+                  lng: parking.location.longitude,
+                }}
+                onClick={() => setSelectedParking(parking)}
+                // onClick={() => handleGoToDetail(parking.id)}
+              />
+            ))}
+        </Map>
+        {!loading && !error && (
+          <NearbyParkings lat={latitude!} lng={longitude!} />
+        )}
+
+        <ParkingSummaryAside
+          parking={selectedParking}
+          onClose={() => setSelectedParking(null)}
+          onClickDetail={() => {
+            if (selectedParking) handleGoToDetail(selectedParking.id)
+          }}
+        />
+      </Fragment>
+    </div>
   )
 }
 

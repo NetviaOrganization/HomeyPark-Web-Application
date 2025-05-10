@@ -1,19 +1,23 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, FC } from 'react'
 import { useMapsLibrary } from '@vis.gl/react-google-maps'
 import { InputText } from 'primereact/inputtext'
+import { IconField } from 'primereact/iconfield'
+import { InputIcon } from 'primereact/inputicon'
 
 interface AutocompleteAddressProps {
   onChangedPlace?: (place: google.maps.places.PlaceResult) => void
   defaultValue?: string
+  loading?: boolean
 }
 
-const AutocompleteAddress = ({
+const AutocompleteAddress: FC<AutocompleteAddressProps> = ({
   onChangedPlace,
+  loading = false,
   defaultValue,
-}: AutocompleteAddressProps) => {
+}) => {
   const placesLib = useMapsLibrary('places')
   const [inputValue, setInputValue] = useState(defaultValue ?? '')
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null)
+  // const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -24,15 +28,15 @@ const AutocompleteAddress = ({
       types: ['address'],
     })
 
-    autocompleteRef.current = autocomplete
-
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace()
-      if (place.name) {
-        setInputValue(place.formatted_address ?? '')
-        onChangedPlace?.(place)
-      }
+      if (!place.name) return
+
+      setInputValue(place.formatted_address ?? '')
+      onChangedPlace?.(place)
     })
+
+    // autocompleteRef.current = autocomplete
 
     return () => {
       google.maps.event.clearInstanceListeners(autocomplete)
@@ -41,13 +45,20 @@ const AutocompleteAddress = ({
   }, [placesLib])
 
   return (
-    <InputText
-      ref={inputRef}
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      placeholder="Avenida Alfredo Benavides 2310, Miraflores, Lima"
-      className="w-full"
-    />
+    <IconField>
+      {loading ? (
+        <InputIcon className="pi pi-spinner pi-spin" />
+      ) : (
+        <InputIcon className="pi pi-search" />
+      )}
+      <InputText
+        ref={inputRef}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Avenida Alfredo Benavides 2310, Miraflores, Lima"
+        className="w-full"
+      />
+    </IconField>
   )
 }
 

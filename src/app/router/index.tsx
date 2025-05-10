@@ -22,6 +22,10 @@ export const router = createBrowserRouter([
     // Component: ProtectedRoute,
     children: [
       {
+        path: '',
+        Component: () => <Navigate to="/find-your-parking" replace />,
+      },
+      {
         path: '/find-your-parking',
         children: [
           {
