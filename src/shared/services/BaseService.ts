@@ -1,13 +1,12 @@
 import { env } from '@/env'
 import Axios, { type AxiosInstance } from 'axios'
 
-class BaseService<T> {
+class BaseService<T = unknown> {
   protected baseUrl: string
   protected http: AxiosInstance
 
   constructor() {
     this.baseUrl = env.api.baseUrl
-
     this.http = Axios.create({
       baseURL: this.baseUrl,
       headers: {
@@ -15,6 +14,19 @@ class BaseService<T> {
         Accept: 'application/json',
       },
     })
+
+    this.http.interceptors.request.use(
+      (config) => {
+        const rawToken = localStorage.getItem('authToken')
+        const token = rawToken ? JSON.parse(rawToken) : null
+        if (token) config.headers.Authorization = `Bearer ${token}`
+        return config
+      },
+      (error) => {
+        console.error('Request error:', error)
+        Promise.reject(error)
+      }
+    )
   }
 
   public async getAll(): Promise<T[]> {

@@ -1,16 +1,16 @@
-import BasePage from '@/app/shared/page/BasePage'
+import BasePage from '@/shared/page/BasePage'
 import { Map, Marker, useApiIsLoaded, useMap } from '@vis.gl/react-google-maps'
 
 import { useNavigate, useParams } from 'react-router'
 import { Parking, UpdateParkingDto } from '../model/parking'
 import ParkingService from '../services/parkingService'
-import { usePromise } from '@/app/shared/hooks/usePromise'
+import { usePromise } from '@/shared/hooks/usePromise'
 import { Controller, useForm } from 'react-hook-form'
-import Title from '@/app/shared/components/Title'
+import Title from '@/shared/components/Title'
 import { Divider } from 'primereact/divider'
 import { InputNumber } from 'primereact/inputnumber'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
-import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
+import AutocompleteAddress from '@/shared/components/AutocompleteAddress'
 import { Button } from 'primereact/button'
 import { useState } from 'react'
 import { useUser } from '../../auth/context/UserContext'
@@ -162,10 +162,7 @@ const CreateEditParkingPage = () => {
     <BasePage>
       <Title>{isEditMode ? 'Edita tu garage' : 'Registra tu garage'}</Title>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="mt-4 h-full flex flex-col"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 h-full flex flex-col">
         <div>
           <Title level="h4">Ubicación</Title>
           <div className="flex flex-col gap-1 mt-2">
@@ -328,9 +325,7 @@ const CreateEditParkingPage = () => {
                     invalid={!!fieldState.error}
                   />
                   {!!fieldState.error && (
-                    <small className="text-red-500 leading">
-                      {fieldState.error.message}
-                    </small>
+                    <small className="text-red-500 leading">{fieldState.error.message}</small>
                   )}
                 </>
               )}

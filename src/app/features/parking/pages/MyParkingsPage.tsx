@@ -1,6 +1,6 @@
-import Title from '@/app/shared/components/Title'
-import { usePromise } from '@/app/shared/hooks/usePromise'
-import BasePage from '@/app/shared/page/BasePage'
+import Title from '@/shared/components/Title'
+import { usePromise } from '@/shared/hooks/usePromise'
+import BasePage from '@/shared/page/BasePage'
 import ParkingService from '../services/parkingService'
 import { useUser } from '../../auth/context/UserContext'
 import ParkingCard from '../components/ParkingCard'
@@ -30,9 +30,7 @@ const MyParkingsPage = () => {
   const [parkingList, setParkingList] = useState<Parking[]>([])
   const toast = useRef<Toast>(null)
 
-  const { data, loading, error } = usePromise(() =>
-    parkingService.getAllByUserId(user!.id!)
-  )
+  const { data, loading, error } = usePromise(() => parkingService.getAllByUserId(user!.id!))
 
   useEffect(() => {
     setParkingList(data || [])
@@ -47,9 +45,7 @@ const MyParkingsPage = () => {
         accept: async () => {
           try {
             await parkingService.deleteParkingById(id)
-            setParkingList((prev) =>
-              prev.filter((parking) => parking.id !== id)
-            )
+            setParkingList((prev) => prev.filter((parking) => parking.id !== id))
 
             resolve()
             toast.current?.show({
@@ -74,12 +70,7 @@ const MyParkingsPage = () => {
       <Title>Mis estacionamientos guardados</Title>
 
       <div className="flex justify-end">
-        <Button
-          label="Agregar"
-          size="small"
-          icon="pi pi-plus"
-          onClick={() => navigate('create')}
-        />
+        <Button label="Agregar" size="small" icon="pi pi-plus" onClick={() => navigate('create')} />
       </div>
 
       <div className="mt-6">

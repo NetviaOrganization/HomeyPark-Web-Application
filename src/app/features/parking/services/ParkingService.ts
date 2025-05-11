@@ -1,4 +1,4 @@
-import BaseService from '@/app/shared/services/BaseService'
+import BaseService from '@/shared/services/BaseService'
 import { CreateParkingDto, Parking, UpdateParkingDto } from '../model/parking'
 
 class ParkingService extends BaseService<Parking> {
@@ -9,9 +9,7 @@ class ParkingService extends BaseService<Parking> {
 
   public override async getById(id: string | number): Promise<Parking> {
     try {
-      const response = await this.http.get<Parking>(
-        `${this.baseUrl}/${id}/details`
-      )
+      const response = await this.http.get<Parking>(`${this.baseUrl}/${id}/details`)
       return response.data
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -33,9 +31,7 @@ class ParkingService extends BaseService<Parking> {
 
   public async getAllByUserId(userId: string | number) {
     try {
-      const response = await this.http.get<Parking[]>(
-        `${this.baseUrl}/user/${userId}`
-      )
+      const response = await this.http.get<Parking[]>(`${this.baseUrl}/user/${userId}`)
       return response.data
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -43,10 +39,7 @@ class ParkingService extends BaseService<Parking> {
     }
   }
 
-  public async updateParking(
-    id: number,
-    parking: UpdateParkingDto
-  ): Promise<void> {
+  public async updateParking(id: number, parking: UpdateParkingDto): Promise<void> {
     try {
       await this.http.put<Parking>(`${this.baseUrl}/${id}`, parking)
       // return response.data

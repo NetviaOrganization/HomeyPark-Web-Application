@@ -1,4 +1,4 @@
-import { usePromise } from '@/app/shared/hooks/usePromise'
+import { usePromise } from '@/shared/hooks/usePromise'
 import ParkingService from '../services/parkingService'
 import { FC } from 'react'
 import ParkingSummary from './ParkingSummary'
@@ -8,9 +8,7 @@ const parkingService = new ParkingService()
 
 const NearbyParkings: FC<Props> = ({ lat, lng }) => {
   const navigate = useNavigate()
-  const { data, loading, error } = usePromise(() =>
-    parkingService.getNearbyByLocation(lat, lng)
-  )
+  const { data, loading, error } = usePromise(() => parkingService.getNearbyByLocation(lat, lng))
 
   if (loading || error || !data?.length) return null
 

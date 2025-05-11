@@ -1,5 +1,5 @@
 import AuthTemplate from '../template/AuthTemplate'
-import Title from '@/app/shared/components/Title'
+import Title from '@/shared/components/Title'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
@@ -7,11 +7,8 @@ import { Link, useNavigate } from 'react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
-import AuthService from '../services/authService'
 import { useState } from 'react'
 import { useUser } from '../context/UserContext'
-
-const authService = new AuthService()
 
 const defaultValues = {
   email: '',
@@ -24,16 +21,15 @@ const LoginPage = () => {
   const navigate = useNavigate()
   const { control, handleSubmit, setValue } = useForm({ defaultValues })
 
-  const { setUser } = useUser()
+  const { login } = useUser()
 
   const onSubmit = async (data: typeof defaultValues) => {
     if (!data.captcha) return
 
     setLoading(true)
     try {
-      const user = await authService.login(data.email, data.password)
+      login('Marcelo Garro', data.password)
 
-      setUser({ email: user.email, id: user.id, name: user.name })
       navigate('/')
     } catch (err) {
       console.error(err)
@@ -45,9 +41,7 @@ const LoginPage = () => {
   return (
     <AuthTemplate>
       <Title level="h1">Inicia sesión</Title>
-      <p className="mt-2">
-        Ingresa a tu cuenta y empieza a reservas estacionamientos.
-      </p>
+      <p className="mt-2">Ingresa a tu cuenta y empieza a reservas estacionamientos.</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
         <div className="flex flex-col gap-4">
@@ -67,11 +61,7 @@ const LoginPage = () => {
               control={control}
               render={({ field, fieldState }) => (
                 <>
-                  <InputText
-                    id="email"
-                    {...field}
-                    invalid={!!fieldState.error}
-                  />
+                  <InputText id="email" {...field} invalid={!!fieldState.error} />
                   {!!fieldState.error && (
                     <small id="email" className="text-red-500">
                       {fieldState.error.message}
@@ -127,20 +117,12 @@ const LoginPage = () => {
           </div>
         </div>
         <div className="mt-8">
-          <Button
-            label="Iniciar sesión"
-            loading={loading}
-            type="submit"
-            className="w-full"
-          />
+          <Button label="Iniciar sesión" loading={loading} type="submit" className="w-full" />
         </div>
         <div className="mt-4">
           <p className="text-center text-sm">
             ¿No tienes una cuenta?{' '}
-            <Link
-              to="/signup"
-              className="text-[var(--primary-color)] underline"
-            >
+            <Link to="/signup" className="text-[var(--primary-color)] underline">
               Regístrate aquí
             </Link>
           </p>

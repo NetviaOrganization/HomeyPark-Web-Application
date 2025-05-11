@@ -1,11 +1,11 @@
-import BasePage from '@/app/shared/page/BasePage'
+import BasePage from '@/shared/page/BasePage'
 import { useParkingDetail } from '../hooks/useParkingDetail'
 import { useNavigate, useParams } from 'react-router'
-import StreetView from '@/app/shared/components/StreetView'
+import StreetView from '@/shared/components/StreetView'
 import { Button } from 'primereact/button'
-import { formatDate } from '@/app/shared/utils/date'
+import { formatDate } from '@/shared/utils/date'
 import Markdown from 'react-markdown'
-import { formatCurrency } from '@/app/shared/utils/money'
+import { formatCurrency } from '@/shared/utils/money'
 
 const ParkingDetailPage = () => {
   const { id } = useParams()
@@ -48,8 +48,7 @@ const ParkingDetailPage = () => {
                   {parking.location.address} {parking.location.numDirection}
                 </h1>
                 <p>
-                  <span>{parking.location.street}</span>,{' '}
-                  <span>{parking.location.city}</span>
+                  <span>{parking.location.street}</span>, <span>{parking.location.city}</span>
                 </p>
               </div>
             </div>
@@ -58,24 +57,18 @@ const ParkingDetailPage = () => {
           <div className="max-w-5xl mx-auto grid grid-cols-2 gap-4 mt-8">
             <div className="flex flex-col gap-8">
               <div>
-                <h3 className="text-gray-800 text-lg font-medium">
-                  Propietario
-                </h3>
+                <h3 className="text-gray-800 text-lg font-medium">Propietario</h3>
                 <div className="mt-1">
                   <p className="text-sm">
-                    <span>{parking.user.name}</span>{' '}
-                    <span>{parking.user.lastName}</span>
+                    <span>{parking.user.name}</span> <span>{parking.user.lastName}</span>
                   </p>
                   <p className="text-sm">
-                    Se unió a HomeyPark desde el{' '}
-                    {formatDate(parking.user.dateCreated)}
+                    Se unió a HomeyPark desde el {formatDate(parking.user.dateCreated)}
                   </p>
                 </div>
               </div>
               <div>
-                <h3 className="text-gray-800 text-lg font-medium">
-                  Acerca del servicio
-                </h3>
+                <h3 className="text-gray-800 text-lg font-medium">Acerca del servicio</h3>
                 <div className="mt-4">
                   <div className="flex gap-8">
                     <div>
@@ -95,9 +88,7 @@ const ParkingDetailPage = () => {
                     <div>
                       <i className="pi pi-dollar text-3xl mx-auto !block w-fit mb-2"></i>
                       <p className="text-sm font-medium">Tarifa/Hora</p>
-                      <p className="text-sm">
-                        {formatCurrency(parking.price)}{' '}
-                      </p>
+                      <p className="text-sm">{formatCurrency(parking.price)} </p>
                     </div>
                   </div>
                 </div>
@@ -105,9 +96,7 @@ const ParkingDetailPage = () => {
             </div>
             <div>
               <div>
-                <h3 className="text-gray-800 text-lg font-medium">
-                  Descripción del garaje
-                </h3>
+                <h3 className="text-gray-800 text-lg font-medium">Descripción del garaje</h3>
                 <div className="mt-1 text-sm">
                   <Markdown>{parking.description}</Markdown>
                 </div>

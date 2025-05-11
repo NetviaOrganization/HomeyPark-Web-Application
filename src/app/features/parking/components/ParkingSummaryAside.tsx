@@ -2,16 +2,11 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { Parking } from '../model/parking'
 import { Nullable } from 'primereact/ts-helpers'
 import { Button } from 'primereact/button'
-import StreetView from '@/app/shared/components/StreetView'
-import { formatDate } from '@/app/shared/utils/date'
-import { formatCurrency } from '@/app/shared/utils/money'
+import StreetView from '@/shared/components/StreetView'
+import { formatDate } from '@/shared/utils/date'
+import { formatCurrency } from '@/shared/utils/money'
 
-const ParkingSummaryAside: FC<Props> = ({
-  parking,
-  onClose,
-  onClickDetail,
-  onClickReserve,
-}) => {
+const ParkingSummaryAside: FC<Props> = ({ parking, onClose, onClickDetail, onClickReserve }) => {
   const [uiParking, setUiParking] = useState<Nullable<Parking>>(parking)
   const [visible, setVisible] = useState(!!parking)
   const timeoutRef = useRef<number>(null)

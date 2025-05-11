@@ -1,4 +1,4 @@
-import BasePage from '@/app/shared/page/BasePage'
+import BasePage from '@/shared/page/BasePage'
 
 const MyReservationsPage = () => {
   return <BasePage>YourReservationsPage</BasePage>

@@ -1,5 +1,7 @@
-import useLocalStorage from '@/app/shared/hooks/useLocalStorage'
-import { createContext, useContext, ReactNode, useState } from 'react'
+import useLocalStorage from '@/shared/hooks/useLocalStorage'
+import { createContext, useContext, ReactNode } from 'react'
+import AuthService from '../services/authService'
+import { Nullable } from 'primereact/ts-helpers'
 
 interface User {
   id?: number
@@ -13,32 +15,75 @@ interface UserContextType {
   setUser: (user: User | null) => void
   isAuthenticated: boolean
   logout: () => void
+  login: (username: string, password: string) => Promise<void>
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
+  authToken: Nullable<string>
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
 
-export function UserProvider({ children }: { children: ReactNode }) {
-  const [storedUser, setStoredUser] = useLocalStorage<User | null>(
-    'authUser',
-    null
-  )
-  const [user, setUser] = useState<User | null>(storedUser)
+const authService = new AuthService()
 
-  const handleSetUser = (newUser: User | null) => {
-    setUser(newUser)
-    setStoredUser(newUser)
+export function UserProvider({ children }: { children: ReactNode }) {
+  // const [user, setStoredUser] = useLocalStorage<User | null>('authUser', null)
+  const [authToken, setAuthToken] = useLocalStorage<Nullable<string>>('authToken', null)
+  // const [user, setUser] = useState<User | null>(user)
+
+  const handleSetUser = () => {
+    // setUser(newUser)
+    // setStoredUser(newUser)
   }
 
   const logout = () => {
-    setUser(null)
-    setStoredUser(null)
+    setAuthToken(null)
+    // setUser(null)
+    // setStoredUser(null)
+  }
+
+  const login = async (username: string, password: string) => {
+    try {
+      const { token } = await authService.login({ username, password })
+
+      console.log('Token:', token)
+
+      setAuthToken(token)
+    } catch (err) {
+      console.error('Error logging in:', err)
+    }
+  }
+
+  const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
+    try {
+      const username = `${firstName} ${lastName}`
+
+      const { id: userId } = await authService.signUp({
+        email,
+        password,
+        roles: ['ROLE_ADMIN'],
+        username: `${firstName} ${lastName}`,
+      })
+
+      await login(username, password)
+
+      await authService.createProfile({
+        address: 'string',
+        name: firstName,
+        lastName,
+        userId,
+      })
+    } catch {
+      throw new Error('Error signing up')
+    }
   }
 
   const value = {
-    user,
+    user: null,
     setUser: handleSetUser,
-    isAuthenticated: !!user,
+    isAuthenticated: !!authToken,
     logout,
+    signUp,
+    authToken,
+    login,
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

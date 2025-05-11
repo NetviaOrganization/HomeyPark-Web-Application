@@ -2,11 +2,10 @@ import { FC, useState } from 'react'
 import { Parking } from '../model/parking'
 import { env } from '@/env'
 import { Button } from 'primereact/button'
-import { isPromise } from '@/app/shared/utils/promise'
+import { isPromise } from '@/shared/utils/promise'
 
 const ParkingCard: FC<Props> = ({ parking, onEdit, onDelete }) => {
-  const { address, numDirection, latitude, longitude, city, street } =
-    parking.location
+  const { address, numDirection, latitude, longitude, city, street } = parking.location
 
   const [loadingDelete, setLoadingDelete] = useState(false)
 

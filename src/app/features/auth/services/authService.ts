@@ -1,53 +1,30 @@
 import { env } from '@/env'
-import Axios, { AxiosInstance } from 'axios'
-import { AuthUser } from '../model/user'
+import { CreateProfileDTO } from '../model/user'
+import type { SignUpDTO, SignUpResponse, LoginDTO, LoginResponse } from '../model/auth'
+import BaseService from '@/shared/services/BaseService'
 
-class AuthService {
-  protected baseUrl: string
-  protected http: AxiosInstance
+class AuthService extends BaseService {
+  protected authUrl: string
+  protected profileUrl: string
 
   constructor() {
-    this.baseUrl = `${env.api.baseUrl}/users`
-
-    this.http = Axios.create({
-      baseURL: this.baseUrl,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    })
+    super()
+    this.authUrl = `${env.api.baseUrl}/authentication`
+    this.profileUrl = `${env.api.baseUrl}/profiles`
   }
 
-  public async login(email: string, password: string): Promise<AuthUser> {
-    try {
-      const response = await this.http.get<AuthUser>(
-        `${this.baseUrl}/login?email=${email}&password=${password}`
-      )
-      return response.data
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      throw error
-    }
+  public async login(dto: LoginDTO) {
+    const response = await this.http.post<LoginResponse>(`${this.authUrl}/sign-in`, dto)
+    return response.data
   }
 
-  public async signUp(
-    email: string,
-    name: string,
-    lastName: string,
-    password: string
-  ): Promise<AuthUser> {
-    try {
-      const response = await this.http.post<AuthUser>(`${this.baseUrl}`, {
-        email,
-        name,
-        lastName,
-        password,
-      })
-      return response.data
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      throw error
-    }
+  public async signUp(dto: SignUpDTO) {
+    const response = await this.http.post<SignUpResponse>(`${this.authUrl}/sign-up`, dto)
+    return response.data
+  }
+
+  public async createProfile(dto: CreateProfileDTO): Promise<void> {
+    await this.http.post<CreateProfileDTO>(`${this.profileUrl}`, dto)
   }
 }
 

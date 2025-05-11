@@ -1,6 +1,6 @@
 import { AdvancedMarker, Map, useMap } from '@vis.gl/react-google-maps'
-import { useGeolocation } from '../../../shared/hooks/useGeolocation'
-import { usePromise } from '@/app/shared/hooks/usePromise'
+import { useGeolocation } from '../../../../shared/hooks/useGeolocation'
+import { usePromise } from '@/shared/hooks/usePromise'
 import ParkingService from '../services/parkingService'
 import { useNavigate } from 'react-router'
 import { Fragment } from 'react/jsx-runtime'
@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import ParkingSummaryAside from '../components/ParkingSummaryAside'
 import { Nullable } from 'primereact/ts-helpers'
 import { Parking } from '../model/parking'
-import AutocompleteAddress from '@/app/shared/components/AutocompleteAddress'
+import AutocompleteAddress from '@/shared/components/AutocompleteAddress'
 
 const DEFAULT_LOCATION = {
   latitude: -12.092446,
@@ -23,11 +23,8 @@ const FindYourParkPage = () => {
   const navigate = useNavigate()
   const { latitude, longitude, loading, error } = useGeolocation()
   const map = useMap(MAP_ID)
-  const { data: parkingList, loading: parkingLoading } = usePromise(() =>
-    parkingService.getAll()
-  )
-  const [selectedParking, setSelectedParking] =
-    useState<Nullable<Parking>>(null)
+  const { data: parkingList, loading: parkingLoading } = usePromise(() => parkingService.getAll())
+  const [selectedParking, setSelectedParking] = useState<Nullable<Parking>>(null)
 
   useEffect(() => {
     if (latitude && longitude) {
@@ -71,10 +68,7 @@ const FindYourParkPage = () => {
           </div>
 
           {!loading && !error && (
-            <AdvancedMarker
-              position={{ lat: latitude!, lng: longitude! }}
-              zIndex={10}
-            >
+            <AdvancedMarker position={{ lat: latitude!, lng: longitude! }} zIndex={10}>
               <div className="w-4 h-4 rounded-full bg-[#4285F4] shadow-[0_0_0_4px_rgba(66,133,244,0.3),0_0_0_8px_rgba(66,133,244,0.15)]" />
             </AdvancedMarker>
           )}
@@ -92,9 +86,7 @@ const FindYourParkPage = () => {
               />
             ))}
         </Map>
-        {!loading && !error && (
-          <NearbyParkings lat={latitude!} lng={longitude!} />
-        )}
+        {!loading && !error && <NearbyParkings lat={latitude!} lng={longitude!} />}
 
         <ParkingSummaryAside
           parking={selectedParking}

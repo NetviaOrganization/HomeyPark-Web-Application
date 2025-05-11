@@ -1,4 +1,4 @@
-import { usePromise } from '@/app/shared/hooks/usePromise'
+import { usePromise } from '@/shared/hooks/usePromise'
 import ParkingService from '../services/parkingService'
 
 const parkingService = new ParkingService()

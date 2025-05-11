@@ -1,5 +1,5 @@
 import { useForm, Controller } from 'react-hook-form'
-import Title from '@/app/shared/components/Title'
+import Title from '@/shared/components/Title'
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Password } from 'primereact/password'
@@ -8,10 +8,8 @@ import AuthTemplate from '../template/AuthTemplate'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
 import { useState } from 'react'
-import AuthService from '../services/authService'
 import { useUser } from '../context/UserContext'
 
-const authService = new AuthService()
 const defaultValues = {
   email: '',
   firstName: '',
@@ -23,27 +21,28 @@ const defaultValues = {
 
 const SignUpPage = () => {
   const [loading, setLoading] = useState(false)
-  const { setUser } = useUser()
+  const { signUp } = useUser()
   const navigate = useNavigate()
   const { control, handleSubmit, setValue } = useForm({
     defaultValues,
     shouldFocusError: true,
   })
 
-  const onSubmit = async (data: typeof defaultValues) => {
-    if (!data.captcha) return
+  const onSubmit = async ({
+    email,
+    firstName,
+    lastName,
+    password,
+    captcha,
+  }: typeof defaultValues) => {
+    if (!captcha) return
 
     setLoading(true)
     try {
-      const user = await authService.signUp(
-        data.email,
-        data.firstName,
-        data.lastName,
-        data.password
-      )
+      await signUp(email, password, firstName, lastName)
 
-      setUser({ email: user.email, id: user.id, name: user.name })
-      navigate('/')
+      // setUser({ email: user.email, id: user.id, name: user.name })
+      // navigate('/')
     } catch (err) {
       console.error(err)
     } finally {
@@ -55,8 +54,7 @@ const SignUpPage = () => {
     <AuthTemplate>
       <Title level="h1">Crear una cuenta nueva</Title>
       <p className="mt-2">
-        Tu vehículo seguro, tu espacio garantizado: Encuentra el lugar perfecto
-        para estacionar.
+        Tu vehículo seguro, tu espacio garantizado: Encuentra el lugar perfecto para estacionar.
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
@@ -77,11 +75,7 @@ const SignUpPage = () => {
               control={control}
               render={({ field, fieldState }) => (
                 <>
-                  <InputText
-                    id="email"
-                    {...field}
-                    invalid={!!fieldState.error}
-                  />
+                  <InputText id="email" {...field} invalid={!!fieldState.error} />
                   {!!fieldState.error && (
                     <small id="email" className="text-red-500">
                       {fieldState.error.message}
@@ -233,12 +227,7 @@ const SignUpPage = () => {
         </div>
 
         <div className="mt-8">
-          <Button
-            loading={loading}
-            label="Crear cuenta"
-            type="submit"
-            className="w-full"
-          />
+          <Button loading={loading} label="Crear cuenta" type="submit" className="w-full" />
         </div>
         <div className="mt-4">
           <p className="text-center text-sm">
