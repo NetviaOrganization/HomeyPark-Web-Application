@@ -2,7 +2,7 @@ import Title from '@/shared/components/Title'
 import { usePromise } from '@/shared/hooks/usePromise'
 import BasePage from '@/shared/page/BasePage'
 import ParkingService from '../services/parkingService'
-import { useUser } from '../../auth/context/UserContext'
+import { useAuth } from '../../auth/context/UserContext'
 import ParkingCard from '../components/ParkingCard'
 import { createUseStyles } from 'react-jss'
 import { useNavigate } from 'react-router'
@@ -23,7 +23,7 @@ const useStyles = createUseStyles({
 })
 
 const MyParkingsPage = () => {
-  const { user } = useUser()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const classes = useStyles()
 

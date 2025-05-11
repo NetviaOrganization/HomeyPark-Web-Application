@@ -1,4 +1,4 @@
-import { useUser } from '@/app/features/auth/context/UserContext'
+import { useAuth } from '@/app/features/auth/context/UserContext'
 import { Button } from 'primereact/button'
 import { Menu } from 'primereact/menu'
 import { MenuItem } from 'primereact/menuitem'
@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom'
 import logo from '@/assets/logo.png'
 
 const Sidebar = () => {
-  const { user, logout } = useUser()
+  const { user, logout } = useAuth()
 
   const items: MenuItem[] = [
     {
@@ -101,12 +101,7 @@ const Sidebar = () => {
             <p className="text-xs">{user?.email}</p>
           </div>
           <div className="shrink-0">
-            <Button
-              text
-              icon="pi pi-sign-out"
-              severity="danger"
-              onClick={logout}
-            />
+            <Button text icon="pi pi-sign-out" severity="danger" onClick={logout} />
           </div>
         </div>
       </div>

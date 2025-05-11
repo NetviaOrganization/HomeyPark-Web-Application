@@ -8,11 +8,11 @@ import { router } from './app/router/index.tsx'
 import { APIProvider } from '@vis.gl/react-google-maps'
 import { GoogleReCaptchaProvider } from '@google-recaptcha/react'
 import { env } from './env/index.ts'
-import { UserProvider } from './app/features/auth/context/UserContext.tsx'
+import { AuthProvider } from './app/features/auth/context/UserContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <UserProvider>
+    <AuthProvider>
       <GoogleReCaptchaProvider type="v2-checkbox" siteKey={env.google.siteKey}>
         <APIProvider apiKey={env.google.apiKey}>
           <PrimeReactProvider
@@ -32,6 +32,6 @@ createRoot(document.getElementById('root')!).render(
           </PrimeReactProvider>
         </APIProvider>
       </GoogleReCaptchaProvider>
-    </UserProvider>
+    </AuthProvider>
   </StrictMode>
 )

@@ -13,7 +13,7 @@ import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import AutocompleteAddress from '@/shared/components/AutocompleteAddress'
 import { Button } from 'primereact/button'
 import { useState } from 'react'
-import { useUser } from '../../auth/context/UserContext'
+import { useAuth } from '../../auth/context/UserContext'
 import { InputTextarea } from 'primereact/inputtextarea'
 
 const parkingService = new ParkingService()
@@ -63,7 +63,7 @@ const mapAddressToForm = (parking: Parking): typeof defaultValues => {
 const CreateEditParkingPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { user } = useUser()
+  const { user } = useAuth()
   const isEditMode = !!id
 
   const { data: initialParking, loading } = usePromise(() =>

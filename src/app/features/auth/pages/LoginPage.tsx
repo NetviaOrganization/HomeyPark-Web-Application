@@ -8,7 +8,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
 import { useState } from 'react'
-import { useUser } from '../context/UserContext'
+import { useAuth } from '../context/UserContext'
 
 const defaultValues = {
   email: '',
@@ -18,10 +18,9 @@ const defaultValues = {
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
   const navigate = useNavigate()
   const { control, handleSubmit, setValue } = useForm({ defaultValues })
-
-  const { login } = useUser()
 
   const onSubmit = async (data: typeof defaultValues) => {
     if (!data.captcha) return
@@ -29,7 +28,6 @@ const LoginPage = () => {
     setLoading(true)
     try {
       login('Marcelo Garro', data.password)
-
       navigate('/')
     } catch (err) {
       console.error(err)

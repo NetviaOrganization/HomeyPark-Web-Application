@@ -8,7 +8,9 @@ import AuthTemplate from '../template/AuthTemplate'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
 import { useState } from 'react'
-import { useUser } from '../context/UserContext'
+import { useAuth } from '../context/UserContext'
+import { EmailAlreadyExistsError } from '../errors/emailAlreadyExistsError'
+import { Nullable } from 'primereact/ts-helpers'
 
 const defaultValues = {
   email: '',
@@ -21,9 +23,11 @@ const defaultValues = {
 
 const SignUpPage = () => {
   const [loading, setLoading] = useState(false)
-  const { signUp } = useUser()
+  const [submitError, setSubmitError] = useState<Nullable<string>>(null)
+
+  const { signUp } = useAuth()
   const navigate = useNavigate()
-  const { control, handleSubmit, setValue } = useForm({
+  const { control, handleSubmit, setValue, setError } = useForm({
     defaultValues,
     shouldFocusError: true,
   })
@@ -37,14 +41,21 @@ const SignUpPage = () => {
   }: typeof defaultValues) => {
     if (!captcha) return
 
+    setSubmitError(null)
+
     setLoading(true)
     try {
       await signUp(email, password, firstName, lastName)
 
-      // setUser({ email: user.email, id: user.id, name: user.name })
-      // navigate('/')
+      navigate('/')
     } catch (err) {
       console.error(err)
+      if (err instanceof EmailAlreadyExistsError) {
+        setError('email', { type: 'custom', message: 'El email ya está en uso' })
+        console.error('Email already exists')
+        return
+      }
+      setSubmitError('Internal server error')
     } finally {
       setLoading(false)
     }
@@ -228,6 +239,11 @@ const SignUpPage = () => {
 
         <div className="mt-8">
           <Button loading={loading} label="Crear cuenta" type="submit" className="w-full" />
+          {submitError && (
+            <small id="email" className="text-red-500">
+              {submitError}
+            </small>
+          )}
         </div>
         <div className="mt-4">
           <p className="text-center text-sm">

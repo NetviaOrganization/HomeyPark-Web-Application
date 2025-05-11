@@ -20,11 +20,11 @@ interface UserContextType {
   authToken: Nullable<string>
 }
 
-const UserContext = createContext<UserContextType | undefined>(undefined)
+const AuthContext = createContext<UserContextType | undefined>(undefined)
 
 const authService = new AuthService()
 
-export function UserProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   // const [user, setStoredUser] = useLocalStorage<User | null>('authUser', null)
   const [authToken, setAuthToken] = useLocalStorage<Nullable<string>>('authToken', null)
   // const [user, setUser] = useState<User | null>(user)
@@ -41,39 +41,31 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const login = async (username: string, password: string) => {
-    try {
-      const { token } = await authService.login({ username, password })
+    const { token } = await authService.login({ username, password })
 
-      console.log('Token:', token)
+    console.log('Token:', token)
 
-      setAuthToken(token)
-    } catch (err) {
-      console.error('Error logging in:', err)
-    }
+    setAuthToken(token)
   }
 
   const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
-    try {
-      const username = `${firstName} ${lastName}`
+    const username = `${firstName} ${lastName}`
 
-      const { id: userId } = await authService.signUp({
-        email,
-        password,
-        roles: ['ROLE_ADMIN'],
-        username: `${firstName} ${lastName}`,
-      })
+    const { id: userId } = await authService.signUp({
+      email,
+      password,
+      roles: ['ROLE_ADMIN'],
+      username: `${firstName} ${lastName}`,
+    })
 
-      await login(username, password)
+    await login(username, password)
 
-      await authService.createProfile({
-        address: 'string',
-        name: firstName,
-        lastName,
-        userId,
-      })
-    } catch {
-      throw new Error('Error signing up')
-    }
+    await authService.createProfile({
+      address: 'string',
+      name: firstName,
+      lastName,
+      userId,
+    })
   }
 
   const value = {
@@ -86,11 +78,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     login,
   }
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export function useUser() {
-  const context = useContext(UserContext)
+export function useAuth() {
+  const context = useContext(AuthContext)
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider')
   }
