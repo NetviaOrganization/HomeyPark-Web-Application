@@ -29,9 +29,9 @@ class ParkingService extends BaseService<Parking> {
     }
   }
 
-  public async getAllByUserId(userId: string | number) {
+  public async getAllByProfileId(profileId: string | number) {
     try {
-      const response = await this.http.get<Parking[]>(`${this.baseUrl}/user/${userId}`)
+      const response = await this.http.get<Parking[]>(`${this.baseUrl}/profile/${profileId}`)
       return response.data
     } catch (error) {
       console.error('Error fetching data:', error)

@@ -13,7 +13,7 @@ import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import AutocompleteAddress from '@/shared/components/AutocompleteAddress'
 import { Button } from 'primereact/button'
 import { useState } from 'react'
-import { useAuth } from '../../auth/context/UserContext'
+import { useAuth } from '../../auth/context/AuthContext'
 import { InputTextarea } from 'primereact/inputtextarea'
 
 const parkingService = new ParkingService()

@@ -7,7 +7,7 @@ import NotFoundPage from '../../shared/page/NotFoundPage'
 import ParkingDetailPage from '../features/parking/pages/ParkingDetailPage'
 import LoginPage from '../features/auth/pages/LoginPage'
 import SignUpPage from '../features/auth/pages/SignUpPage'
-import { useAuth } from '../features/auth/context/UserContext'
+import { useAuth } from '../features/auth/context/AuthContext'
 import CreateEditParkingPage from '../features/parking/pages/CreateEditParkingPage'
 
 export const router = createBrowserRouter([

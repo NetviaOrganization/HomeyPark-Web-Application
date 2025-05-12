@@ -1,4 +1,4 @@
-import { useAuth } from '@/app/features/auth/context/UserContext'
+import { useAuth } from '@/app/features/auth/context/AuthContext'
 import { Button } from 'primereact/button'
 import { Menu } from 'primereact/menu'
 import { MenuItem } from 'primereact/menuitem'
@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom'
 import logo from '@/assets/logo.png'
 
 const Sidebar = () => {
-  const { user, logout } = useAuth()
+  const { profile, logout, authUser } = useAuth()
 
   const items: MenuItem[] = [
     {
@@ -97,8 +97,10 @@ const Sidebar = () => {
             <i className="pi pi-user"></i>
           </div>
           <div className="w-full">
-            <p className="text-sm font-semibold">{user?.name}</p>
-            <p className="text-xs">{user?.email}</p>
+            <p className="text-sm font-semibold">
+              {profile?.name} {profile?.lastName}
+            </p>
+            <p className="text-xs">{authUser?.username}</p>
           </div>
           <div className="shrink-0">
             <Button text icon="pi pi-sign-out" severity="danger" onClick={logout} />

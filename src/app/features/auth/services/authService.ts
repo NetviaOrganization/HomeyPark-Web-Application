@@ -1,9 +1,9 @@
 import { env } from '@/env'
-import { CreateProfileDTO } from '../model/user'
 import type { SignUpDTO, SignUpResponse, LoginDTO, LoginResponse } from '../model/auth'
 import BaseService from '@/shared/services/BaseService'
 import { InvalidCredentialsError } from '../errors/invalidCredentialsError'
-import { EmailAlreadyExistsError } from '../errors/emailAlreadyExistsError'
+import { UserAlreadyExistsError } from '../errors/emailAlreadyExistsError'
+import { Profile, CreateProfileDTO } from '../model/profile'
 
 class AuthService extends BaseService {
   protected authUrl: string
@@ -29,12 +29,19 @@ class AuthService extends BaseService {
       const response = await this.http.post<SignUpResponse>(`${this.authUrl}/sign-up`, dto)
       return response.data
     } catch {
-      throw new EmailAlreadyExistsError('Email already exists')
+      throw new UserAlreadyExistsError('Email already exists')
     }
   }
 
   public async createProfile(dto: CreateProfileDTO): Promise<void> {
-    await this.http.post<CreateProfileDTO>(`${this.profileUrl}`, dto)
+    await this.http.post(`${this.profileUrl}`, dto)
+  }
+
+  public async getProfileByUserId(userId: number | string) {
+    const response = await this.http.get<Profile[]>(`${this.profileUrl}`)
+    const profile = response.data.find((profile) => profile.userId === userId)
+
+    return profile ?? null
   }
 }
 

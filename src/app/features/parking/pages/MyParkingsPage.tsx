@@ -2,7 +2,7 @@ import Title from '@/shared/components/Title'
 import { usePromise } from '@/shared/hooks/usePromise'
 import BasePage from '@/shared/page/BasePage'
 import ParkingService from '../services/parkingService'
-import { useAuth } from '../../auth/context/UserContext'
+import { useAuth } from '../../auth/context/AuthContext'
 import ParkingCard from '../components/ParkingCard'
 import { createUseStyles } from 'react-jss'
 import { useNavigate } from 'react-router'
@@ -23,14 +23,17 @@ const useStyles = createUseStyles({
 })
 
 const MyParkingsPage = () => {
-  const { user } = useAuth()
+  const { profile } = useAuth()
   const navigate = useNavigate()
   const classes = useStyles()
 
   const [parkingList, setParkingList] = useState<Parking[]>([])
   const toast = useRef<Toast>(null)
 
-  const { data, loading, error } = usePromise(() => parkingService.getAllByUserId(user!.id!))
+  const { data, loading, error } = usePromise(() => {
+    if (!profile?.id) return Promise.resolve([])
+    return parkingService.getAllByProfileId(profile.id)
+  }, [profile?.id])
 
   useEffect(() => {
     setParkingList(data || [])

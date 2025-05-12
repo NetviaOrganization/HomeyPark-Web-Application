@@ -8,7 +8,7 @@ import { router } from './app/router/index.tsx'
 import { APIProvider } from '@vis.gl/react-google-maps'
 import { GoogleReCaptchaProvider } from '@google-recaptcha/react'
 import { env } from './env/index.ts'
-import { AuthProvider } from './app/features/auth/context/UserContext.tsx'
+import { AuthProvider } from './app/features/auth/context/AuthContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
