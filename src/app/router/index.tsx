@@ -1,15 +1,13 @@
-import { createBrowserRouter, Navigate, useLocation } from 'react-router'
-import DashboardLayout from '../layout/DashboardLayout'
+import { createBrowserRouter, Navigate } from 'react-router'
 import FindYourParkPage from '../features/parking/pages/FindYourParkPage'
 import MyReservationsPage from '../features/reservations/pages/MyReservationsPage'
 import MyParkingsPage from '../features/parking/pages/MyParkingsPage'
 import NotFoundPage from '../../shared/page/NotFoundPage'
 import ParkingDetailPage from '../features/parking/pages/ParkingDetailPage'
-import LoginPage from '../features/auth/pages/LoginPage'
-import SignUpPage from '../features/auth/pages/SignUpPage'
-import { useAuth } from '../features/auth/context/AuthContext'
 import CreateEditParkingPage from '../features/parking/pages/CreateEditParkingPage'
 import ProfilePage from '../features/profile/ProfilePage'
+import MyVehiclesListPage from '../features/vehicles/pages/MyVehiclesListPage'
+import { LoginRedirect, SignupRedirect, ProtectedRoute } from './ProtectedRoute'
 
 export const router = createBrowserRouter([
   {
@@ -65,44 +63,13 @@ export const router = createBrowserRouter([
         Component: ProfilePage,
       },
       {
+        path: '/vehicles',
+        Component: MyVehiclesListPage,
+      },
+      {
         path: '*',
         Component: NotFoundPage,
       },
     ],
   },
 ])
-
-function ProtectedRoute() {
-  const { isAuthenticated } = useAuth()
-  const location = useLocation()
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />
-  }
-
-  return <DashboardLayout />
-}
-
-function LoginRedirect() {
-  const { isAuthenticated } = useAuth()
-  const location = useLocation()
-  const from = location.state?.from?.pathname || '/find-your-parking'
-
-  if (isAuthenticated) {
-    return <Navigate to={from} replace />
-  }
-
-  return <LoginPage />
-}
-
-function SignupRedirect() {
-  const { isAuthenticated } = useAuth()
-  const location = useLocation()
-  const from = location.state?.from?.pathname || '/find-your-parking'
-
-  if (isAuthenticated) {
-    return <Navigate to={from} replace />
-  }
-
-  return <SignUpPage />
-}

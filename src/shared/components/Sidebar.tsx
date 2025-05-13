@@ -3,13 +3,12 @@ import { Button } from 'primereact/button'
 import { Menu } from 'primereact/menu'
 import { MenuItem } from 'primereact/menuitem'
 import { classNames } from 'primereact/utils'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import logo from '@/assets/logo.png'
 
 const Sidebar = () => {
   const { profile, logout, authUser } = useAuth()
-  const navigate = useNavigate()
 
   const items: MenuItem[] = [
     {
@@ -82,6 +81,41 @@ const Sidebar = () => {
         },
       ],
     },
+    {
+      label: 'Usuario',
+      items: [
+        {
+          label: 'Mi perfil',
+          template: (item) => (
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                classNames('px-5 py-3 block w-full text-sm', {
+                  'bg-gray-100': isActive,
+                })
+              }
+            >
+              {item.label}
+            </NavLink>
+          ),
+        },
+        {
+          label: 'Mis vehículos',
+          template: (item) => (
+            <NavLink
+              to="/vehicles"
+              className={({ isActive }) =>
+                classNames('px-5 py-3 block w-full text-sm', {
+                  'bg-gray-100': isActive,
+                })
+              }
+            >
+              {item.label}
+            </NavLink>
+          ),
+        },
+      ],
+    },
   ]
 
   return (
@@ -104,13 +138,6 @@ const Sidebar = () => {
             <p className="text-xs">{authUser?.username}</p>
           </div>
           <div className="shrink-0 flex">
-            <Button
-              size="small"
-              text
-              icon="pi pi-cog"
-              severity="secondary"
-              onClick={() => navigate('/profile')}
-            />
             <Button size="small" text icon="pi pi-sign-out" severity="danger" onClick={logout} />
           </div>
         </div>
