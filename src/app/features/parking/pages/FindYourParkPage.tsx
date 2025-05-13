@@ -67,8 +67,8 @@ const FindYourParkPage = () => {
             <AutocompleteAddress onChangedPlace={handleChangedPlace} />
           </div>
 
-          {!loading && !error && (
-            <AdvancedMarker position={{ lat: latitude!, lng: longitude! }} zIndex={10}>
+          {!loading && !error && latitude && longitude && (
+            <AdvancedMarker position={{ lat: +latitude, lng: +longitude }} zIndex={10}>
               <div className="w-4 h-4 rounded-full bg-[#4285F4] shadow-[0_0_0_4px_rgba(66,133,244,0.3),0_0_0_8px_rgba(66,133,244,0.15)]" />
             </AdvancedMarker>
           )}
@@ -78,15 +78,16 @@ const FindYourParkPage = () => {
               <AdvancedMarker
                 key={parking.id}
                 position={{
-                  lat: parking.location.latitude,
-                  lng: parking.location.longitude,
+                  lat: +parking.latitude,
+                  lng: +parking.longitude,
                 }}
                 onClick={() => setSelectedParking(parking)}
-                // onClick={() => handleGoToDetail(parking.id)}
               />
             ))}
         </Map>
-        {!loading && !error && <NearbyParkings lat={latitude!} lng={longitude!} />}
+        {!loading && !error && latitude && longitude && (
+          <NearbyParkings lat={+latitude} lng={+longitude} />
+        )}
 
         <ParkingSummaryAside
           parking={selectedParking}
