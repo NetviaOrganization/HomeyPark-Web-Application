@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../auth/context/AuthContext'
 import { Parking } from '../model/parking'
-import ParkingService from '../services/parkingService'
+import ParkingService from '../services/ParkingService'
 
 const parkingService = new ParkingService()
 
