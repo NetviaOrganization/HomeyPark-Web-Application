@@ -5,7 +5,7 @@ import Footer from '../../shared/components/Footer'
 const DashboardLayout = () => {
   return (
     <div className="w-full h-screen flex flex-col">
-      <div className="w-full h-full flex">
+      <div className="w-full h-full flex container mx-auto">
         <Sidebar />
         <Outlet />
       </div>

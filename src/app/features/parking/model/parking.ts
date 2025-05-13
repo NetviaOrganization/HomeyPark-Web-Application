@@ -1,20 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export type Parking = {
-  id: number
+  id: 0
+  profileId: number
   width: number
   length: number
   height: number
   price: number
   phone: string
-  space: number
+  space: string
   description: string
-  location: Location
-  schedules: any[] // You might want to define a Schedule type later
-  user: User
-}
-
-export type Location = {
-  id: number
   address: string
   numDirection: string
   street: string
@@ -22,37 +15,13 @@ export type Location = {
   city: string
   latitude: number
   longitude: number
+  day: string
+  startTime: string
+  endTime: string
 }
 
-export type User = {
-  id: number
-  name: string
-  lastName: string
-  email: string
-  password: string
-  dateCreated: string
-  vehicles: any[] // You might want to define a Vehicle type later
-  cards: any[] // You might want to define a Card type later
-}
-
-export type UpdateParkingDto = {
-  width: number
-  length: number
-  height: number
-  price: number
-  phone: string
-  space: number
-  description: string
-  address: string
-  numDirection: string
-  street: string
-  district: string
-  city: string
-  coordinates: string
-  latitude: number
-  longitude: number
-}
+export type UpdateParkingDto = Omit<Parking, 'id' | 'profileId' | 'day' | 'startTime' | 'endTime'>
 
 export type CreateParkingDto = UpdateParkingDto & {
-  userId: number
+  profileId: number
 }
