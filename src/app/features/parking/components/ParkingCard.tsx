@@ -5,7 +5,7 @@ import { Button } from 'primereact/button'
 import { isPromise } from '@/shared/utils/promise'
 
 const ParkingCard: FC<Props> = ({ parking, onEdit, onDelete }) => {
-  const { address, numDirection, latitude, longitude, city, street } = parking.location
+  const { address, numDirection, latitude, longitude, city, street } = parking
 
   const [loadingDelete, setLoadingDelete] = useState(false)
 
