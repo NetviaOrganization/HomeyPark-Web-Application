@@ -4,36 +4,28 @@ import BasePage from '@/shared/page/BasePage'
 import ParkingService from '../services/parkingService'
 import { useAuth } from '../../auth/context/AuthContext'
 import ParkingCard from '../components/ParkingCard'
-import { createUseStyles } from 'react-jss'
 import { useNavigate } from 'react-router'
 import { Button } from 'primereact/button'
 import { useEffect, useRef, useState } from 'react'
 import { Parking } from '../model/parking'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
 import { Toast } from 'primereact/toast'
+import EmptyParkingList from '../components/EmptyParkingList'
 
 const parkingService = new ParkingService()
 
-const useStyles = createUseStyles({
-  cardList: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '16px',
-  },
-})
-
 const MyParkingsPage = () => {
   const { profile } = useAuth()
-  const navigate = useNavigate()
-  const classes = useStyles()
-
-  const [parkingList, setParkingList] = useState<Parking[]>([])
-  const toast = useRef<Toast>(null)
 
   const { data, loading, error } = usePromise(() => {
     if (!profile?.id) return Promise.resolve([])
     return parkingService.getAllByProfileId(profile.id)
   }, [profile?.id])
+
+  const navigate = useNavigate()
+
+  const [parkingList, setParkingList] = useState<Parking[]>([])
+  const toast = useRef<Toast>(null)
 
   useEffect(() => {
     setParkingList(data || [])
@@ -76,13 +68,13 @@ const MyParkingsPage = () => {
         <Button label="Agregar" size="small" icon="pi pi-plus" onClick={() => navigate('create')} />
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 h-full">
         {loading ? (
           <div>Loading...</div>
         ) : error ? (
           <div>Error</div>
         ) : data?.length ? (
-          <div className={classes.cardList}>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {parkingList.map((parking) => (
               <ParkingCard
                 key={parking.id}
@@ -92,7 +84,9 @@ const MyParkingsPage = () => {
               />
             ))}
           </div>
-        ) : null}
+        ) : (
+          <EmptyParkingList />
+        )}
       </div>
 
       <ConfirmDialog />
