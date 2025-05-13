@@ -86,7 +86,11 @@ const FindYourParkPage = () => {
             ))}
         </Map>
         {!loading && !error && latitude && longitude && (
-          <NearbyParkings lat={+latitude} lng={+longitude} />
+          <NearbyParkings
+            lat={+latitude}
+            lng={+longitude}
+            onClick={(parking) => setSelectedParking(parking)}
+          />
         )}
 
         <ParkingSummaryAside

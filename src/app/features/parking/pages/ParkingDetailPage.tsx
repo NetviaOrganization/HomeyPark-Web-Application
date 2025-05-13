@@ -3,7 +3,7 @@ import { useParkingDetail } from '../hooks/useParkingDetail'
 import { useNavigate, useParams } from 'react-router'
 import StreetView from '@/shared/components/StreetView'
 import { Button } from 'primereact/button'
-import { formatDate } from '@/shared/utils/date'
+// import { formatDate } from '@/shared/utils/date'
 import Markdown from 'react-markdown'
 import { formatCurrency } from '@/shared/utils/money'
 
@@ -36,8 +36,8 @@ const ParkingDetailPage = () => {
           <div className="relative rounded-lg overflow-hidden">
             <StreetView
               className="w-full h-96 "
-              lat={parking.location.latitude}
-              lng={parking.location.longitude}
+              lat={+parking.latitude}
+              lng={+parking.longitude}
               disableDefaultUI
               zoomControl={null}
               clickToGo={false}
@@ -45,10 +45,10 @@ const ParkingDetailPage = () => {
             <div className="bg-gradient-to-t from-black/60 to-black/10 absolute top-0 left-0 bottom-0 right-0 z-10 flex flex-col justify-end pointer-events-none">
               <div className="text-white p-6 *:pointer-events-auto w-fit">
                 <h1 className="text-3xl font-semibold">
-                  {parking.location.address} {parking.location.numDirection}
+                  {parking.address} {parking.numDirection}
                 </h1>
                 <p>
-                  <span>{parking.location.street}</span>, <span>{parking.location.city}</span>
+                  <span>{parking.street}</span>, <span>{parking.city}</span>
                 </p>
               </div>
             </div>
@@ -56,7 +56,7 @@ const ParkingDetailPage = () => {
 
           <div className="max-w-5xl mx-auto grid grid-cols-2 gap-4 mt-8">
             <div className="flex flex-col gap-8">
-              <div>
+              {/* <div>
                 <h3 className="text-gray-800 text-lg font-medium">Propietario</h3>
                 <div className="mt-1">
                   <p className="text-sm">
@@ -66,7 +66,7 @@ const ParkingDetailPage = () => {
                     Se unió a HomeyPark desde el {formatDate(parking.user.dateCreated)}
                   </p>
                 </div>
-              </div>
+              </div> */}
               <div>
                 <h3 className="text-gray-800 text-lg font-medium">Acerca del servicio</h3>
                 <div className="mt-4">
