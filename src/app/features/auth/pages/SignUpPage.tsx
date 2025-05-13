@@ -11,6 +11,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { UserAlreadyExistsError } from '../errors/emailAlreadyExistsError'
 import { Nullable } from 'primereact/ts-helpers'
+import { Checkbox } from 'primereact/checkbox'
 
 const defaultValues = {
   email: '',
@@ -19,6 +20,7 @@ const defaultValues = {
   lastName: '',
   password: '',
   repeatPassword: '',
+  termsAndConditions: false,
   captcha: false,
 }
 
@@ -253,6 +255,45 @@ const SignUpPage = () => {
                   )}
                 />
               </div>
+            </div>
+          </div>
+          <div>
+            <div className="flex flex-col ">
+              <Controller
+                name="termsAndConditions"
+                control={control}
+                rules={{
+                  required: { value: true, message: 'Debes aceptar los términos y condiciones' },
+                }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <div>
+                      <Checkbox
+                        inputId="termsAndConditions"
+                        {...field}
+                        onChange={(e) => field.onChange(e.checked)}
+                        checked={field.value}
+                        invalid={!!fieldState.error}
+                      />
+                      <label htmlFor="termsAndConditions" className="ml-2">
+                        He leído y acepto los{' '}
+                        <a
+                          href="https://homey-park-experiments.web.app/terms-conditions"
+                          target="_blank"
+                          className="text-[#10b981] hover:underline cursor-pointer"
+                        >
+                          términos y condiciones
+                        </a>
+                      </label>
+                    </div>
+                    {!!fieldState.error && (
+                      <small id="termsAndConditions" className="text-red-500">
+                        {fieldState.error.message}
+                      </small>
+                    )}
+                  </>
+                )}
+              />
             </div>
           </div>
 
