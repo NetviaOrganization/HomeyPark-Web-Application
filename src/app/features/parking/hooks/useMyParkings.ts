@@ -8,14 +8,19 @@ import ParkingService from '../services/parkingService'
 const parkingService = new ParkingService()
 
 export const useMyParkings = () => {
-  const { profile } = useAuth()
+  const { profile, loading } = useAuth()
 
-  const { data, loading, error } = usePromise<Parking[], AxiosError>(() => {
-    if (!profile?.id) return Promise.resolve([])
+  const {
+    data,
+    loading: loadingData,
+    error,
+  } = usePromise<Parking[] | null, AxiosError>(() => {
+    if (!profile?.id) return null
     return parkingService.getAllByProfileId(profile.id)
-  }, [profile?.id])
+  }, [profile?.id, loading])
 
   const [parkingList, setParkingList] = useState<Parking[]>([])
+
   useEffect(() => {
     setParkingList(data || [])
   }, [data])
@@ -25,5 +30,5 @@ export const useMyParkings = () => {
     setParkingList((prev) => prev.filter((parking) => parking.id !== id))
   }
 
-  return { parkingList, loading, error, handleDeleteParking }
+  return { parkingList, loading: loading || loadingData, error, handleDeleteParking }
 }

@@ -19,6 +19,7 @@ interface UserContextType {
   ) => Promise<void>
   authToken: Nullable<string>
   authUser: Nullable<AuthUser>
+  loading?: boolean
 }
 
 interface AuthUser {
@@ -34,10 +35,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authToken, setAuthToken] = useLocalStorage<Nullable<string>>('authToken', null)
   const [profile, setProfile] = useState<Nullable<Profile>>(null)
   const [authUser, setAuthUser] = useLocalStorage<Nullable<AuthUser>>('authUser', null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const initialFetchProfile = async () => {
       try {
+        setLoading(true)
         if (!authToken) return
         if (!authUser) return
 
@@ -48,6 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setProfile(profile)
       } catch (err) {
         console.error('Error fetching profile:', err)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -98,6 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signUp,
     authToken,
     login,
+    loading,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
