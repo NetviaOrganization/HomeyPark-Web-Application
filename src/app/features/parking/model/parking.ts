@@ -20,8 +20,13 @@ export type Parking = {
   endTime: string
 }
 
-export type UpdateParkingDto = Omit<Parking, 'id' | 'profileId' | 'day' | 'startTime' | 'endTime'>
+export type UpdateParkingDto = Omit<
+  Parking,
+  'id' | 'profileId' | 'day' | 'startTime' | 'endTime'
+> & {
+  coordinates: string
+}
 
-export type CreateParkingDto = UpdateParkingDto & {
+export type CreateParkingDto = Omit<UpdateParkingDto, 'coordinates'> & {
   profileId: number
 }
