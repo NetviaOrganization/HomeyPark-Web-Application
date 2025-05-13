@@ -3,5 +3,9 @@ export interface Vehicle {
   licensePlate: string
   model: string
   brand: string
-  profileId: string
+  profileId: number
 }
+
+export type UpdateVehicleDTO = Omit<Vehicle, 'id' | 'profileId'>
+
+export type CreateVehicleDTO = Omit<Vehicle, 'id'>

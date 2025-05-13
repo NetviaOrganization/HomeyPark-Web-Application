@@ -1,5 +1,5 @@
 import BaseService from '@/shared/services/BaseService'
-import { Vehicle } from '../model/vehicle'
+import { CreateVehicleDTO, UpdateVehicleDTO, Vehicle } from '../model/vehicle'
 
 export default class VehicleService extends BaseService<Vehicle> {
   constructor() {
@@ -23,6 +23,26 @@ export default class VehicleService extends BaseService<Vehicle> {
       return response.data
     } catch (error) {
       console.error('Error deleting vehicle:', error)
+      throw error
+    }
+  }
+
+  public async editById(id: string | number, data: UpdateVehicleDTO) {
+    try {
+      const response = await this.http.put<Vehicle>(`${this.baseUrl}/update/${id}`, data)
+      return response.data
+    } catch (error) {
+      console.error('Error editing vehicle:', error)
+      throw error
+    }
+  }
+
+  public async create(data: CreateVehicleDTO) {
+    try {
+      const response = await this.http.post<Vehicle>(`${this.baseUrl}/create`, data)
+      return response.data
+    } catch (error) {
+      console.error('Error creating vehicle:', error)
       throw error
     }
   }

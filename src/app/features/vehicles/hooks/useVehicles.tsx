@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../auth/context/AuthContext'
-import type { Vehicle } from '../model/vehicle'
+import type { CreateVehicleDTO, UpdateVehicleDTO, Vehicle } from '../model/vehicle'
 import VehicleService from '../services/vehicleService'
 
 const vehicleService = new VehicleService()
@@ -43,10 +43,28 @@ export const useVehicles = () => {
       setVehicles((prev) => prev.filter((vehicle) => vehicle.id !== vehicleId))
     } catch (err) {
       setError(err as AxiosError)
-    } finally {
-      setLoading(false)
     }
   }
 
-  return { vehicles, loading, error, deleteVehicle }
+  const editVehicle = async (vehicleId: string | number, vehicleData: UpdateVehicleDTO) => {
+    try {
+      await vehicleService.editById(vehicleId, vehicleData)
+      setVehicles((prev) =>
+        prev.map((vehicle) => (vehicle.id === vehicleId ? { ...vehicle, ...vehicleData } : vehicle))
+      )
+    } catch (err) {
+      setError(err as AxiosError)
+    }
+  }
+
+  const createVehicle = async (data: CreateVehicleDTO) => {
+    try {
+      const vehicle = await vehicleService.create(data)
+      setVehicles((prev) => [...prev, vehicle])
+    } catch (err) {
+      setError(err as AxiosError)
+    }
+  }
+
+  return { vehicles, loading, error, deleteVehicle, editVehicle, createVehicle }
 }
