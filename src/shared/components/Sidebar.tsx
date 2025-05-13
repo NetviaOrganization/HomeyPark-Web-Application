@@ -3,12 +3,13 @@ import { Button } from 'primereact/button'
 import { Menu } from 'primereact/menu'
 import { MenuItem } from 'primereact/menuitem'
 import { classNames } from 'primereact/utils'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import logo from '@/assets/logo.png'
 
 const Sidebar = () => {
   const { profile, logout, authUser } = useAuth()
+  const navigate = useNavigate()
 
   const items: MenuItem[] = [
     {
@@ -84,7 +85,7 @@ const Sidebar = () => {
   ]
 
   return (
-    <div className="max-w-80 w-full border-r-slate-100 border-r px-6 py-6 flex flex-col">
+    <div className="max-w-96 w-full border-r-slate-100 border-r px-6 py-6 flex flex-col">
       <div className="w-40 mx-auto mb-4">
         <img className="w-full" src={logo} alt="HomeyPark Logo" />
       </div>
@@ -102,8 +103,15 @@ const Sidebar = () => {
             </p>
             <p className="text-xs">{authUser?.username}</p>
           </div>
-          <div className="shrink-0">
-            <Button text icon="pi pi-sign-out" severity="danger" onClick={logout} />
+          <div className="shrink-0 flex">
+            <Button
+              size="small"
+              text
+              icon="pi pi-cog"
+              severity="secondary"
+              onClick={() => navigate('/profile')}
+            />
+            <Button size="small" text icon="pi pi-sign-out" severity="danger" onClick={logout} />
           </div>
         </div>
       </div>

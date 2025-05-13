@@ -9,6 +9,7 @@ import LoginPage from '../features/auth/pages/LoginPage'
 import SignUpPage from '../features/auth/pages/SignUpPage'
 import { useAuth } from '../features/auth/context/AuthContext'
 import CreateEditParkingPage from '../features/parking/pages/CreateEditParkingPage'
+import ProfilePage from '../features/profile/ProfilePage'
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
             Component: CreateEditParkingPage,
           },
         ],
+      },
+      {
+        path: '/profile',
+        Component: ProfilePage,
       },
       {
         path: '*',
