@@ -1,10 +1,12 @@
 import { DependencyList, useEffect, useRef, useState } from 'react'
 
-export function usePromise<T>(promiseFactory: () => Promise<T> | null, deps: DependencyList = []) {
+export function usePromise<T, E extends Error>(
+  promiseFactory: () => Promise<T> | null,
+  deps: DependencyList = []
+) {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<T | null>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [error, setError] = useState<any>(null)
+  const [error, setError] = useState<E | null>(null)
 
   const active = useRef(true)
   const currentPromise = useRef<Promise<T> | null>(null)

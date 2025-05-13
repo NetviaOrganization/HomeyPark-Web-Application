@@ -1,37 +1,22 @@
 import Title from '@/shared/components/Title'
-import { usePromise } from '@/shared/hooks/usePromise'
 import BasePage from '@/shared/page/BasePage'
-import ParkingService from '../services/parkingService'
-import { useAuth } from '../../auth/context/AuthContext'
 import ParkingCard from '../components/ParkingCard'
 import { useNavigate } from 'react-router'
 import { Button } from 'primereact/button'
-import { useEffect, useRef, useState } from 'react'
-import { Parking } from '../model/parking'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
 import { Toast } from 'primereact/toast'
 import EmptyParkingList from '../components/EmptyParkingList'
-
-const parkingService = new ParkingService()
+import ErrorParkingListBoundary from '../components/ErrorParkingListBoundary'
+import LoadingIcon from '@/assets/icons/LoadingIcon'
+import { useMyParkings } from '../hooks/useMyParkings'
+import { useRef } from 'react'
 
 const MyParkingsPage = () => {
-  const { profile } = useAuth()
-
-  const { data, loading, error } = usePromise(() => {
-    if (!profile?.id) return Promise.resolve([])
-    return parkingService.getAllByProfileId(profile.id)
-  }, [profile?.id])
-
   const navigate = useNavigate()
-
-  const [parkingList, setParkingList] = useState<Parking[]>([])
   const toast = useRef<Toast>(null)
+  const { parkingList, loading, error, handleDeleteParking } = useMyParkings()
 
-  useEffect(() => {
-    setParkingList(data || [])
-  }, [data])
-
-  const handleDeleteParking = (id: string | number) => {
+  const handleDelete = (id: string | number) => {
     return new Promise<void>((resolve, reject) => {
       confirmDialog({
         message: '¿Estás seguro de que deseas eliminar este estacionamiento?',
@@ -39,10 +24,9 @@ const MyParkingsPage = () => {
         icon: 'pi pi-exclamation-triangle',
         accept: async () => {
           try {
-            await parkingService.deleteParkingById(id)
-            setParkingList((prev) => prev.filter((parking) => parking.id !== id))
-
+            await handleDeleteParking(id)
             resolve()
+
             toast.current?.show({
               severity: 'success',
               summary: 'Éxito',
@@ -70,17 +54,22 @@ const MyParkingsPage = () => {
 
       <div className="mt-6 h-full">
         {loading ? (
-          <div>Loading...</div>
+          <div className="flex items-center justify-center h-full w-full">
+            <LoadingIcon className="text-[#10b981] animate-spin " width={120} height={120} />
+          </div>
         ) : error ? (
-          <div>Error</div>
-        ) : data?.length ? (
+          <ErrorParkingListBoundary
+            error={error.message}
+            errorCode={error.response?.status ?? ''}
+          />
+        ) : parkingList.length ? (
           <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
             {parkingList.map((parking) => (
               <ParkingCard
                 key={parking.id}
                 parking={parking}
                 onEdit={() => navigate(`edit/${parking.id}`)}
-                onDelete={() => handleDeleteParking(parking.id)}
+                onDelete={() => handleDelete(parking.id)}
               />
             ))}
           </div>
