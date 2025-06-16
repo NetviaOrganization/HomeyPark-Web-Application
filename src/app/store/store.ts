@@ -3,11 +3,12 @@ import { Nullable } from 'primereact/ts-helpers'
 import { createStore, useStore } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
+import { Profile } from '../features/profile/model/profile'
 
 /* ----------  state & actions ---------- */
 interface StoreState {
-  auth: { token: Nullable<string> }
-  profile: Nullable<unknown>
+  auth: { token: Nullable<string>; profileId: Nullable<string>; email: Nullable<string> }
+  profileData: { loading: boolean; profile: Nullable<Profile> }
 }
 
 /* ----------  explicit mutators list ----------
@@ -20,9 +21,9 @@ type Mutators = [['zustand/persist', unknown], ['zustand/immer', never]]
 export const appStore = createStore<StoreState, Mutators>(
   persist(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    immer((_set) => ({
-      auth: { token: null },
-      profile: null,
+    immer<StoreState>((_set) => ({
+      auth: { token: null, profileId: null, email: null },
+      profileData: { loading: false, profile: null },
     })),
     {
       name: 'auth-storage',
@@ -32,7 +33,7 @@ export const appStore = createStore<StoreState, Mutators>(
 )
 
 /* ----------  hooks ---------- */
-export const useAppStore = (selector: (state: StoreState) => StoreState[keyof StoreState]) => {
+export const useAppStore = <T>(selector: (state: StoreState) => T) => {
   const state = useStore(appStore, selector)
 
   return state

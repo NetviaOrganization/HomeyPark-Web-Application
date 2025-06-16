@@ -1,5 +1,6 @@
 import AuthService from '@/app/features/auth/services/authService'
 import { appStore } from '@/app/store/store'
+import { jwtDecode } from 'jwt-decode'
 
 const authService = new AuthService()
 
@@ -10,5 +11,7 @@ export const login = async (email: string, password: string) => {
 
   set((state) => {
     state.auth.token = token
+    state.auth.profileId = jwtDecode(token).sub ?? null
+    state.auth.email = email
   })
 }

@@ -1,3 +1,4 @@
+import { appStore } from '@/app/store/store'
 import { env } from '@/env'
 import Axios, { type AxiosInstance } from 'axios'
 
@@ -17,8 +18,7 @@ class BaseService<T = unknown> {
 
     this.http.interceptors.request.use(
       (config) => {
-        const rawToken = localStorage.getItem('authToken')
-        const token = rawToken ? JSON.parse(rawToken) : null
+        const token = appStore.getState().auth.token
         if (token) config.headers.Authorization = `Bearer ${token}`
         return config
       },
