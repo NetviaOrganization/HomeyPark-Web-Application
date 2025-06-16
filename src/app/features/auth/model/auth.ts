@@ -10,7 +10,7 @@ export interface SignUpResponse extends Omit<SignUpDTO, 'password'> {
 }
 
 export interface LoginDTO {
-  username: string
+  email: string
   password: string
 }
 

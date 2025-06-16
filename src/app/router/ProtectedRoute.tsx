@@ -1,11 +1,13 @@
 import { useLocation, Navigate } from 'react-router'
-import { useAuth } from '../features/auth/context/AuthContext'
 import DashboardLayout from '../layout/DashboardLayout'
 import SignUpPage from '../features/auth/pages/SignUpPage'
 import LoginPage from '../features/auth/pages/LoginPage'
+import { useAppStore } from '../store/store'
 
 export const ProtectedRoute = () => {
-  const { isAuthenticated } = useAuth()
+  const token = useAppStore((state) => state.auth.token)
+  const isAuthenticated = !!token
+
   const location = useLocation()
 
   if (!isAuthenticated) {
@@ -16,7 +18,9 @@ export const ProtectedRoute = () => {
 }
 
 export const SignupRedirect = () => {
-  const { isAuthenticated } = useAuth()
+  const token = useAppStore((state) => state.auth.token)
+  const isAuthenticated = !!token
+
   const location = useLocation()
   const from = location.state?.from?.pathname || '/find-your-parking'
 
@@ -28,7 +32,9 @@ export const SignupRedirect = () => {
 }
 
 export const LoginRedirect = () => {
-  const { isAuthenticated } = useAuth()
+  const token = useAppStore((state) => state.auth.token)
+  const isAuthenticated = !!token
+
   const location = useLocation()
   const from = location.state?.from?.pathname || '/find-your-parking'
 

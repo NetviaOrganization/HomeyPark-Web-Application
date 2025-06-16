@@ -18,8 +18,12 @@ class AuthService extends BaseService {
   public async login(dto: LoginDTO) {
     try {
       const response = await this.http.post<LoginResponse>(`${this.authUrl}/sign-in`, dto)
+
+      console.log('Login response:', response.data)
+
       return response.data
     } catch {
+      console.error('Login failed')
       throw new InvalidCredentialsError('Invalid credentials')
     }
   }

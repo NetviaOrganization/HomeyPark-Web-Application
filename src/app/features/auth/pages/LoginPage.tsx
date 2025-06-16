@@ -8,17 +8,16 @@ import { Controller, useForm } from 'react-hook-form'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
 import { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
+import { login } from '../useCases/login'
 
 const defaultValues = {
-  username: '',
+  email: '',
   password: '',
   captcha: false,
 }
 
 const LoginPage = () => {
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
   const navigate = useNavigate()
   const { control, handleSubmit, setValue } = useForm({ defaultValues })
 
@@ -27,7 +26,8 @@ const LoginPage = () => {
 
     setLoading(true)
     try {
-      login(data.username, data.password)
+      await login(data.email, data.password)
+      // login(data.username, data.password)
       navigate('/')
     } catch (err) {
       console.error(err)
@@ -48,14 +48,14 @@ const LoginPage = () => {
               Username
             </label>
             <Controller
-              name="username"
+              name="email"
               rules={{
                 required: { value: true, message: REQUIRED_INPUT_ERROR },
               }}
               control={control}
               render={({ field, fieldState }) => (
                 <>
-                  <InputText id="email" {...field} invalid={!!fieldState.error} />
+                  <InputText type="email" id="email" {...field} invalid={!!fieldState.error} />
                   {!!fieldState.error && (
                     <small id="email" className="text-red-500">
                       {fieldState.error.message}
