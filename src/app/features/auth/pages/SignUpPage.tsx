@@ -8,14 +8,12 @@ import AuthTemplate from '../template/AuthTemplate'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
 import { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
-import { UserAlreadyExistsError } from '../errors/emailAlreadyExistsError'
 import { Nullable } from 'primereact/ts-helpers'
 import { Checkbox } from 'primereact/checkbox'
+import { signUp } from '../useCases/signUp'
 
 const defaultValues = {
   email: '',
-  username: '',
   firstName: '',
   lastName: '',
   password: '',
@@ -28,16 +26,14 @@ const SignUpPage = () => {
   const [loading, setLoading] = useState(false)
   const [submitError, setSubmitError] = useState<Nullable<string>>(null)
 
-  const { signUp } = useAuth()
   const navigate = useNavigate()
-  const { control, handleSubmit, setValue, setError } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues,
     shouldFocusError: true,
   })
 
   const onSubmit = async ({
     email,
-    username,
     firstName,
     lastName,
     password,
@@ -49,17 +45,10 @@ const SignUpPage = () => {
 
     setLoading(true)
     try {
-      await signUp(email, username, password, firstName, lastName)
-
+      await signUp(email, firstName, lastName, password, new Date('2024-01-01'))
       navigate('/')
     } catch (err) {
-      console.error(err)
-      if (err instanceof UserAlreadyExistsError) {
-        setError('username', { type: 'custom', message: 'El usuario ya se encuentra registrado' })
-        console.error('Email or username already exists')
-        return
-      }
-      setSubmitError('Internal server error')
+      console.error('Error during sign up:', err)
     } finally {
       setLoading(false)
     }
@@ -86,33 +75,6 @@ const SignUpPage = () => {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                   message: 'El email no es válido',
                 },
-              }}
-              control={control}
-              render={({ field, fieldState }) => (
-                <>
-                  <InputText id="email" {...field} invalid={!!fieldState.error} />
-                  {!!fieldState.error && (
-                    <small id="email" className="text-red-500">
-                      {fieldState.error.message}
-                    </small>
-                  )}
-                </>
-              )}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-sm font-medium">
-              Username
-            </label>
-            <Controller
-              name="username"
-              rules={{
-                required: { value: true, message: REQUIRED_INPUT_ERROR },
-                // pattern: {
-                // value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                // message: 'El email no es válido',
-                // },
               }}
               control={control}
               render={({ field, fieldState }) => (

@@ -1,6 +1,8 @@
 export interface SignUpDTO {
   email: string
-  username: string
+  firstName: string
+  lastName: string
+  birthDate: string
   password: string
   roles: string[]
 }
