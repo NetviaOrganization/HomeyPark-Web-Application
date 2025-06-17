@@ -11,6 +11,8 @@ const BadgeStatus: FC<Props> = ({ type }) => {
         return 'Cancelada'
       case 'in-progress':
         return 'En progreso'
+      case 'approved':
+        return 'Aprobada'
       default:
         return ''
     }
@@ -26,6 +28,8 @@ const BadgeStatus: FC<Props> = ({ type }) => {
         return 'bg-red-500 text-white'
       case 'in-progress':
         return 'bg-blue-500 text-white'
+      case 'approved':
+        return 'bg-purple-500 text-white'
       default:
         return ''
     }
@@ -35,7 +39,7 @@ const BadgeStatus: FC<Props> = ({ type }) => {
 }
 
 interface Props {
-  type: 'pending' | 'completed' | 'cancelled' | 'in-progress'
+  type: 'pending' | 'completed' | 'cancelled' | 'in-progress' | 'approved'
 }
 
 export default BadgeStatus

@@ -1,12 +1,13 @@
 import BasePage from '@/shared/page/BasePage'
 import ReservationTabs from '../components/ReservationTabs'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ReservationService from '../services/reservationService'
 import { useAppStore } from '@/app/store/store'
 import { Reservation } from '../model/reservation'
 import ReservationSummary from '../components/ReservationSummary'
 import { useNavigate } from 'react-router'
 import { Button } from 'primereact/button'
+import { Toast } from 'primereact/toast'
 
 const reservationService = new ReservationService()
 
@@ -14,6 +15,7 @@ const HostReservationsPage = () => {
   const hostId = useAppStore((state) => state.auth.profileId)
   const [reservations, setReservations] = useState<Reservation[]>([])
   const navigate = useNavigate()
+  const toast = useRef<Toast>(null)
 
   useEffect(() => {
     if (!hostId) return
@@ -47,6 +49,11 @@ const HostReservationsPage = () => {
     try {
       await reservationService.cancelReservation(id)
       setReservations((prev) => prev.filter((reservation) => reservation.id !== id))
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Reserva cancelada',
+        detail: `La reserva #${id.toString().padStart(9, '0')} ha sido cancelada.`,
+      })
     } catch (err) {
       console.error('Error canceling reservation:', err)
     }
@@ -60,6 +67,11 @@ const HostReservationsPage = () => {
           reservation.id === id ? { ...reservation, status: 'Approved' } : reservation
         )
       )
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Reserva aceptada',
+        detail: `La reserva #${id.toString().padStart(9, '0')} ha sido aceptada.`,
+      })
     } catch (err) {
       console.error('Error approving reservation:', err)
     }
@@ -73,6 +85,11 @@ const HostReservationsPage = () => {
           reservation.id === id ? { ...reservation, status: 'InProgress' } : reservation
         )
       )
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Reserva iniciada',
+        detail: `La reserva #${id.toString().padStart(9, '0')} ha sido iniciada.`,
+      })
     } catch (err) {
       console.error('Error starting reservation:', err)
     }
@@ -86,6 +103,11 @@ const HostReservationsPage = () => {
           reservation.id === id ? { ...reservation, status: 'Completed' } : reservation
         )
       )
+      toast.current?.show({
+        severity: 'success',
+        summary: 'Reserva completada',
+        detail: `La reserva #${id.toString().padStart(9, '0')} ha sido completada.`,
+      })
     } catch (err) {
       console.error('Error completing reservation:', err)
     }
@@ -163,6 +185,7 @@ const HostReservationsPage = () => {
           renderReservationSummaries(pastReservations),
         ]}
       />
+      <Toast ref={toast} position="top-right" />
     </BasePage>
   )
 }

@@ -31,7 +31,7 @@ const ReservationSummary: FC<Props> = ({ reservation, onClickCard, actions }) =>
       case 'InProgress':
         return 'in-progress'
       case 'Approved':
-        return 'completed'
+        return 'approved'
       case 'Completed':
         return 'completed'
       case 'Cancelled':
@@ -42,7 +42,7 @@ const ReservationSummary: FC<Props> = ({ reservation, onClickCard, actions }) =>
   }
 
   return (
-    <Card className="shadow-md *:*:p-0" onClick={onClickCard}>
+    <Card className="shadow-md *:*:p-0 cursor-pointer" onClick={onClickCard}>
       <div className="p-0">
         <div className="flex items-start justify-between">
           <div>
