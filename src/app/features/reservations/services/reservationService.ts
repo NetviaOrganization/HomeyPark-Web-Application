@@ -32,6 +32,28 @@ class ReservationService extends BaseService<Reservation> {
     const response = await this.http.get<Reservation>(`/reservations/${id}`)
     return response.data
   }
+
+  async changeReservationStatus(id: number, status: string) {
+    const response = await this.http.put(`/reservations/${id}/status`, { status })
+    console.log('Reservation status changed:', response.data)
+    return response.data
+  }
+
+  async cancelReservation(id: number) {
+    await this.changeReservationStatus(id, 'Cancelled')
+  }
+
+  async approveReservation(id: number) {
+    await this.changeReservationStatus(id, 'Approved')
+  }
+
+  async startReservation(id: number) {
+    await this.changeReservationStatus(id, 'InProgress')
+  }
+
+  async completeReservation(id: number) {
+    await this.changeReservationStatus(id, 'Completed')
+  }
 }
 
 export default ReservationService

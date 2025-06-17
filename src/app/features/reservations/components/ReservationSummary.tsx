@@ -8,7 +8,7 @@ import BadgeStatus from './BadgeStatus'
 
 const parkingService = new ParkingService()
 
-const ReservationSummary: FC<Props> = ({ reservation, onClickCard }) => {
+const ReservationSummary: FC<Props> = ({ reservation, onClickCard, actions }) => {
   const [parking, setParking] = useState<Nullable<Parking>>(null)
 
   useEffect(() => {
@@ -58,6 +58,8 @@ const ReservationSummary: FC<Props> = ({ reservation, onClickCard }) => {
           <span className="font-medium">Desde {reservation.startTime}</span>
           <span className="font-medium">Hasta {reservation.endTime}</span>
         </section>
+
+        {actions && <section className="mt-4">{actions}</section>}
       </div>
     </Card>
   )
@@ -66,6 +68,7 @@ const ReservationSummary: FC<Props> = ({ reservation, onClickCard }) => {
 interface Props {
   reservation: Reservation
   onClickCard?: () => void
+  actions?: React.ReactNode
 }
 
 export default ReservationSummary
