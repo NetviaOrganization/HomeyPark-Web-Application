@@ -40,8 +40,8 @@ const ParkingSummaryAside: FC<Props> = ({ parking, onClose, onClickDetail, onCli
               <StreetView
                 className="w-full h-64"
                 disableDefaultUI
-                lat={+uiParking.latitude}
-                lng={+uiParking.longitude}
+                lat={+uiParking.location.latitude}
+                lng={+uiParking.location.longitude}
                 clickToGo={false}
               />
               <Button
@@ -57,7 +57,8 @@ const ParkingSummaryAside: FC<Props> = ({ parking, onClose, onClickDetail, onCli
             </div>
             <div className="px-6 py-5 h-full flex flex-col">
               <h2 className="text-2xl font-bold text-900 mb-3">
-                {uiParking.address} {uiParking.numDirection}, {uiParking.street}
+                {uiParking.location.address} {uiParking.location.numDirection},{' '}
+                {uiParking.location.street}
               </h2>
               <p className="text-sm text-700 mb-3">{uiParking.description}</p>
 

@@ -5,10 +5,10 @@ const ParkingSummary: FC<Props> = ({ parking, onClick }) => {
   return (
     <div className="border rounded-md border-slate-200 p-4 cursor-pointer" onClick={onClick}>
       <p className="text-sm font-semibold">
-        {parking.address} {parking.numDirection}
+        {parking.location.address} {parking.location.numDirection}
       </p>
       <p className="mt-2 text-sm">
-        {parking.street}, {parking.city}
+        {parking.location.street}, {parking.location.city}
       </p>
     </div>
   )

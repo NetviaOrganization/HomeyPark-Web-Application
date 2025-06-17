@@ -78,8 +78,8 @@ const FindYourParkPage = () => {
               <AdvancedMarker
                 key={parking.id}
                 position={{
-                  lat: +parking.latitude,
-                  lng: +parking.longitude,
+                  lat: +parking.location.latitude,
+                  lng: +parking.location.longitude,
                 }}
                 onClick={() => setSelectedParking(parking)}
               />

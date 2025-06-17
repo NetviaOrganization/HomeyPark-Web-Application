@@ -36,8 +36,8 @@ const ParkingDetailPage = () => {
           <div className="relative rounded-lg overflow-hidden">
             <StreetView
               className="w-full h-96 "
-              lat={+parking.latitude}
-              lng={+parking.longitude}
+              lat={+parking.location.latitude}
+              lng={+parking.location.longitude}
               disableDefaultUI
               zoomControl={null}
               clickToGo={false}
@@ -45,10 +45,10 @@ const ParkingDetailPage = () => {
             <div className="bg-gradient-to-t from-black/60 to-black/10 absolute top-0 left-0 bottom-0 right-0 z-10 flex flex-col justify-end pointer-events-none">
               <div className="text-white p-6 *:pointer-events-auto w-fit">
                 <h1 className="text-3xl font-semibold">
-                  {parking.address} {parking.numDirection}
+                  {parking.location.address} {parking.location.numDirection}
                 </h1>
                 <p>
-                  <span>{parking.street}</span>, <span>{parking.city}</span>
+                  <span>{parking.location.street}</span>, <span>{parking.location.city}</span>
                 </p>
               </div>
             </div>
