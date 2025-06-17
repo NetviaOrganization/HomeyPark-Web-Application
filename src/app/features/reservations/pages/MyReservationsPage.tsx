@@ -29,13 +29,17 @@ const MyReservationsPage = () => {
     fetchReservations()
   }, [guestId])
 
-  const pendingReservations = reservations.filter((reservation) => reservation.status === 'Pending')
-
   const inProgressReservations = reservations.filter(
     (reservation) => reservation.status === 'InProgress'
   )
 
-  const pastReservations = reservations.filter((reservation) => reservation.status === 'Completed')
+  const incomingReservations = reservations.filter(
+    (reservation) => reservation.status === 'Approved' || reservation.status === 'Pending'
+  )
+
+  const pastReservations = reservations.filter(
+    (reservation) => reservation.status === 'Completed' || reservation.status === 'Cancelled'
+  )
 
   const renderReservationSummaries = (reservations: Reservation[]) => {
     if (reservations.length === 0) {
@@ -63,7 +67,7 @@ const MyReservationsPage = () => {
         tabHeaders={['En progreso', 'Proximo', 'Pasado']}
         tabContents={[
           renderReservationSummaries(inProgressReservations),
-          renderReservationSummaries(pendingReservations),
+          renderReservationSummaries(incomingReservations),
           renderReservationSummaries(pastReservations),
         ]}
       />
