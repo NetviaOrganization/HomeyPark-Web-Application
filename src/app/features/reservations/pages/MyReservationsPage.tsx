@@ -1,24 +1,63 @@
 import BasePage from '@/shared/page/BasePage'
 import ReservationTabs from '../components/ReservationTabs'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ReservationService from '../services/reservationService'
 import { useAppStore } from '@/app/store/store'
+import { Reservation } from '../model/reservation'
+import ReservationSummary from '../components/ReservationSummary'
 
 const reservationService = new ReservationService()
 
 const MyReservationsPage = () => {
   const guestId = useAppStore((state) => state.auth.profileId)
+  const [reservations, setReservations] = useState<Reservation[]>([])
 
   useEffect(() => {
     if (!guestId) return
-    reservationService.getReservationsByGuestId(guestId).then(console.log).catch(console.error)
+
+    const fetchReservations = async () => {
+      try {
+        const reservations = await reservationService.getReservationsByGuestId(guestId)
+        setReservations(reservations)
+      } catch (err) {
+        console.error('Error fetching reservations:', err)
+      }
+    }
+
+    fetchReservations()
   }, [guestId])
+
+  const pendingReservations = reservations.filter((reservation) => reservation.status === 'Pending')
+
+  const inProgressReservations = reservations.filter(
+    (reservation) => reservation.status === 'InProgress'
+  )
+
+  const pastReservations = reservations.filter((reservation) => reservation.status === 'Completed')
+
+  const renderReservationSummaries = (reservations: Reservation[]) => {
+    if (reservations.length === 0) {
+      return <p className="text-center text-gray-500">No hay reservas para mostrar</p>
+    }
+
+    return (
+      <div className="grid grid-cols-3 gap-4">
+        {reservations.map((reservation) => (
+          <ReservationSummary key={reservation.id} reservation={reservation} />
+        ))}
+      </div>
+    )
+  }
 
   return (
     <BasePage>
       <ReservationTabs
         tabHeaders={['En progreso', 'Proximo', 'Pasado']}
-        tabContents={[<div>En progreso</div>, <div>Proximo</div>, <div>Pasado</div>]}
+        tabContents={[
+          renderReservationSummaries(inProgressReservations),
+          renderReservationSummaries(pendingReservations),
+          renderReservationSummaries(pastReservations),
+        ]}
       />
     </BasePage>
   )

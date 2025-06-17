@@ -1,9 +1,9 @@
 import BaseService from '@/shared/services/BaseService'
-import { CreateReservationDto } from '../model/reservation'
+import { CreateReservationDto, Reservation } from '../model/reservation'
 
 class ReservationService extends BaseService {
   async getReservationsByGuestId(userId: string) {
-    const response = await this.http.get(`/reservations/guest/${userId}`)
+    const response = await this.http.get<Reservation[]>(`/reservations/guest/${userId}`)
     return response.data
   }
 
