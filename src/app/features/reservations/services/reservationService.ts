@@ -22,6 +22,11 @@ class ReservationService extends BaseService {
 
     return response.data
   }
+
+  async getReservationsByHostId(userId: string) {
+    const response = await this.http.get<Reservation[]>(`/reservations/host/${userId}`)
+    return response.data
+  }
 }
 
 export default ReservationService

@@ -70,7 +70,7 @@ const Sidebar = () => {
           label: 'Reservas entrantes',
           template: (item) => (
             <NavLink
-              to="/incoming-reservations"
+              to="/host-reservations"
               className={({ isActive }) =>
                 classNames('px-5 py-3 block w-full text-sm', {
                   'bg-gray-100': isActive,
