@@ -47,6 +47,10 @@ const FindYourParkPage = () => {
     }
   }
 
+  const handleGoToReservation = (parking: Parking) => {
+    navigate(`/checkout/${parking.id}`)
+  }
+
   return (
     <div className="w-full h-full relative overflow-hidden">
       <Fragment>
@@ -96,6 +100,9 @@ const FindYourParkPage = () => {
         <ParkingSummaryAside
           parking={selectedParking}
           onClose={() => setSelectedParking(null)}
+          onClickReserve={() => {
+            if (selectedParking) handleGoToReservation(selectedParking)
+          }}
           onClickDetail={() => {
             if (selectedParking) handleGoToDetail(selectedParking.id)
           }}

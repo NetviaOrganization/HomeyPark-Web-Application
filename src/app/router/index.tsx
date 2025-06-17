@@ -8,6 +8,7 @@ import CreateEditParkingPage from '../features/parking/pages/CreateEditParkingPa
 import ProfilePage from '../features/profile/ProfilePage'
 import MyVehiclesListPage from '../features/vehicles/pages/MyVehiclesListPage'
 import { LoginRedirect, SignupRedirect, ProtectedRoute } from './ProtectedRoute'
+import ReservationParkingPage from '../features/reservations/pages/ReservationParkingPage'
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
       {
         path: '/my-reservations',
         Component: MyReservationsPage,
+      },
+      {
+        path: '/checkout/:parkingId',
+        Component: ReservationParkingPage,
       },
       {
         path: '/my-garages',
