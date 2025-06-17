@@ -8,6 +8,13 @@ export type Parking = {
   phone: string
   space: string
   description: string
+  location: Location
+}
+
+export type UpdateParkingDto = Omit<Parking, 'id' | 'profileId'>
+export type CreateParkingDto = Omit<Parking, 'id'>
+
+interface Location {
   address: string
   numDirection: string
   street: string
@@ -15,18 +22,4 @@ export type Parking = {
   city: string
   latitude: number
   longitude: number
-  day: string
-  startTime: string
-  endTime: string
-}
-
-export type UpdateParkingDto = Omit<
-  Parking,
-  'id' | 'profileId' | 'day' | 'startTime' | 'endTime'
-> & {
-  coordinates: string
-}
-
-export type CreateParkingDto = Omit<UpdateParkingDto, 'coordinates'> & {
-  profileId: number
 }

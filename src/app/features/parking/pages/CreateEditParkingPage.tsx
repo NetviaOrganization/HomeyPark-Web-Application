@@ -42,22 +42,8 @@ const defaultValues = {
 }
 
 const mapAddressToForm = (parking: Parking): typeof defaultValues => {
-  const {
-    address,
-    numDirection,
-    district,
-    street,
-    city,
-    space,
-    length,
-    width,
-    height,
-    description,
-    phone,
-    price,
-    latitude,
-    longitude,
-  } = parking
+  const { space, length, width, height, description, phone, price } = parking
+  const { address, numDirection, district, street, city, latitude, longitude } = parking.location
 
   return {
     address,
@@ -106,21 +92,22 @@ const CreateEditParkingPage = () => {
     setSendLoading(true)
     try {
       const payload: UpdateParkingDto = {
-        address: data.address,
-        numDirection: data.number,
-        district: data.district,
-        street: data.street,
-        city: data.city,
+        location: {
+          address: data.address,
+          numDirection: data.number,
+          district: data.district,
+          street: data.street,
+          city: data.city,
+          latitude: data.latitude,
+          longitude: data.longitude,
+        },
         space: data.space.toString(),
-        latitude: data.latitude,
-        longitude: data.longitude,
         height: data.height,
         width: data.width,
         length: data.length,
         price: data.price,
-        phone: data.phone,
+        phone: data.phone.replace(/\s/g, ''), // Remove spaces
         description: data.description,
-        coordinates: `${data.latitude},${data.longitude}`,
       }
 
       if (isEditMode) await parkingService.updateParking(initialParking!.id, payload)
@@ -206,8 +193,8 @@ const CreateEditParkingPage = () => {
               {!loading && (
                 <AutocompleteAddress
                   onChangedPlace={handleChangedPlace}
-                  defaultValue={`${initialParking?.address ?? ''} ${
-                    initialParking?.numDirection ?? ''
+                  defaultValue={`${initialParking?.location.address ?? ''} ${
+                    initialParking?.location.numDirection ?? ''
                   }`.trim()}
                 />
               )}
