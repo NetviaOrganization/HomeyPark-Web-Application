@@ -10,7 +10,7 @@ const VehiclesList: FC<Props> = ({ vehicles, onEdit, onDelete, loadingVehicleDel
   }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
       {vehicles.map((vehicle) => (
         <VehicleCard
           key={vehicle.id}
