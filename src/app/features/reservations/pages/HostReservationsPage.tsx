@@ -5,12 +5,14 @@ import ReservationService from '../services/reservationService'
 import { useAppStore } from '@/app/store/store'
 import { Reservation } from '../model/reservation'
 import ReservationSummary from '../components/ReservationSummary'
+import { useNavigate } from 'react-router'
 
 const reservationService = new ReservationService()
 
 const HostReservationsPage = () => {
   const hostId = useAppStore((state) => state.auth.profileId)
   const [reservations, setReservations] = useState<Reservation[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!hostId) return
@@ -46,7 +48,13 @@ const HostReservationsPage = () => {
     return (
       <div className="grid grid-cols-3 gap-4">
         {reservations.map((reservation) => (
-          <ReservationSummary key={reservation.id} reservation={reservation} />
+          <ReservationSummary
+            key={reservation.id}
+            reservation={reservation}
+            onClickCard={() => {
+              navigate(`/reservations/${reservation.id}`)
+            }}
+          />
         ))}
       </div>
     )

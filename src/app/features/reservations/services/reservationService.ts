@@ -1,7 +1,7 @@
 import BaseService from '@/shared/services/BaseService'
 import { CreateReservationDto, Reservation } from '../model/reservation'
 
-class ReservationService extends BaseService {
+class ReservationService extends BaseService<Reservation> {
   async getReservationsByGuestId(userId: string) {
     const response = await this.http.get<Reservation[]>(`/reservations/guest/${userId}`)
     return response.data
@@ -25,6 +25,11 @@ class ReservationService extends BaseService {
 
   async getReservationsByHostId(userId: string) {
     const response = await this.http.get<Reservation[]>(`/reservations/host/${userId}`)
+    return response.data
+  }
+
+  async getById(id: string | number): Promise<Reservation> {
+    const response = await this.http.get<Reservation>(`/reservations/${id}`)
     return response.data
   }
 }
