@@ -13,9 +13,9 @@ import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import AutocompleteAddress from '@/shared/components/AutocompleteAddress'
 import { Button } from 'primereact/button'
 import { useEffect, useState } from 'react'
-import { useAuth } from '../../auth/context/AuthContext'
 import { InputTextarea } from 'primereact/inputtextarea'
 import { InputMask } from 'primereact/inputmask'
+import { useAppStore } from '@/app/store/store'
 
 const parkingService = new ParkingService()
 
@@ -80,7 +80,7 @@ const mapAddressToForm = (parking: Parking): typeof defaultValues => {
 const CreateEditParkingPage = () => {
   const navigate = useNavigate()
   const { id } = useParams()
-  const { profile } = useAuth()
+  const profile = useAppStore((state) => state.profileData.profile)
   const isLoaded = useApiIsLoaded()
   const map = useMap('create-edit-park-map')
   const [sendLoading, setSendLoading] = useState(false)

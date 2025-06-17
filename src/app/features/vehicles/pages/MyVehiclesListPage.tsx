@@ -10,7 +10,7 @@ import { Button } from 'primereact/button'
 import { Controller, useForm } from 'react-hook-form'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { InputText } from 'primereact/inputtext'
-import { useAuth } from '../../auth/context/AuthContext'
+import { useAppStore } from '@/app/store/store'
 
 const defaultFormValues = {
   licensePlate: '',
@@ -24,7 +24,7 @@ const MyVehiclesListPage = () => {
   const toast = useRef<Toast>(null)
   const [editVehicleSelected, setEditVehicleSelected] = useState<Vehicle | null>(null)
   const [submitLoading, setSubmitLoading] = useState(false)
-  const { profile } = useAuth()
+  const profile = useAppStore((state) => state.profileData.profile)
 
   const { control, handleSubmit } = useForm({
     defaultValues: defaultFormValues,

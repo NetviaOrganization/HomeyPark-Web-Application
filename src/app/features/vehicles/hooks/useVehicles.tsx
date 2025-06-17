@@ -1,13 +1,15 @@
 import { AxiosError } from 'axios'
 import { useState, useEffect } from 'react'
-import { useAuth } from '../../auth/context/AuthContext'
 import type { CreateVehicleDTO, UpdateVehicleDTO, Vehicle } from '../model/vehicle'
 import VehicleService from '../services/vehicleService'
+import { useAppStore } from '@/app/store/store'
+import { useAuthState } from '@/shared/hooks/useAuth'
 
 const vehicleService = new VehicleService()
 
 export const useVehicles = () => {
-  const { loading: loadingProfile, authUser } = useAuth()
+  const loadingProfile = useAppStore((state) => state.profileData.loading)
+  const { profileId } = useAuthState()
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const [loading, setLoading] = useState(true)
@@ -16,7 +18,7 @@ export const useVehicles = () => {
   useEffect(() => {
     if (loadingProfile) return
 
-    if (!authUser?.id) {
+    if (!profileId) {
       setVehicles([])
       setLoading(false)
       return
@@ -24,7 +26,7 @@ export const useVehicles = () => {
 
     const fetchVehicles = async () => {
       try {
-        const response = await vehicleService.getAllByUserId(authUser.id)
+        const response = await vehicleService.getAllByUserId(profileId)
 
         setVehicles(response)
       } catch (err) {
@@ -35,7 +37,7 @@ export const useVehicles = () => {
     }
 
     fetchVehicles()
-  }, [authUser?.id, loadingProfile])
+  }, [profileId, loadingProfile])
 
   const deleteVehicle = async (vehicleId: string | number) => {
     try {

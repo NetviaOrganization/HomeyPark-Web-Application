@@ -1,14 +1,14 @@
 import { usePromise } from '@/shared/hooks/usePromise'
 import { AxiosError } from 'axios'
 import { useState, useEffect } from 'react'
-import { useAuth } from '../../auth/context/AuthContext'
 import { Parking } from '../model/parking'
 import ParkingService from '../services/parkingService'
+import { useAppStore } from '@/app/store/store'
 
 const parkingService = new ParkingService()
 
 export const useMyParkings = () => {
-  const { profile, loading } = useAuth()
+  const { profile, loading } = useAppStore((state) => state.profileData)
 
   const {
     data,

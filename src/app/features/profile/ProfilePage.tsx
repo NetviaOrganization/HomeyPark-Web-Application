@@ -1,13 +1,16 @@
 import Title from '@/shared/components/Title'
 import BasePage from '@/shared/page/BasePage'
 import ProfileIcon from './icons/ProfileIcon'
-import { useAuth } from '../auth/context/AuthContext'
 import LoadingIcon from '@/assets/icons/LoadingIcon'
 import { Link } from 'react-router'
 import { useMyParkings } from '../parking/hooks/useMyParkings'
+import { useAppStore } from '@/app/store/store'
+import { useAuthState } from '@/shared/hooks/useAuth'
 
 const ProfilePage = () => {
-  const { profile, loading, authUser } = useAuth()
+  // const { profile, loading, authUser } = useAuth()
+  const { profile, loading } = useAppStore((state) => state.profileData)
+  const { email } = useAuthState()
   const { parkingList } = useMyParkings()
 
   return (
@@ -26,9 +29,9 @@ const ProfilePage = () => {
             </div>
             <div className="flex gap-2 justify-between w-full">
               <div>
-                <p className="text-xl font-bold">@{authUser?.username}</p>
+                <p className="text-xl font-bold">{email}</p>
                 <p className="text-xl">
-                  {profile.name} {profile.lastName}
+                  {profile.firstName} {profile.lastName}
                 </p>
                 <Link to="/profile/edit" className="text-base text-[#10b981] hover:underline">
                   Editar perfil

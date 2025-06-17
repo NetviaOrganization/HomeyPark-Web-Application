@@ -8,30 +8,27 @@ import { router } from './app/router/index.tsx'
 import { APIProvider } from '@vis.gl/react-google-maps'
 import { GoogleReCaptchaProvider } from '@google-recaptcha/react'
 import { env } from './env/index.ts'
-import { AuthProvider } from './app/features/auth/context/AuthContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
-      <GoogleReCaptchaProvider type="v2-checkbox" siteKey={env.google.siteKey}>
-        <APIProvider apiKey={env.google.apiKey}>
-          <PrimeReactProvider
-            value={{
-              ripple: true,
-              pt: {
-                inputtext: {
-                  root: { className: 'text-sm p-inputtext-sm' },
-                },
-                button: {
-                  root: { className: 'text-sm' },
-                },
+    <GoogleReCaptchaProvider type="v2-checkbox" siteKey={env.google.siteKey}>
+      <APIProvider apiKey={env.google.apiKey}>
+        <PrimeReactProvider
+          value={{
+            ripple: true,
+            pt: {
+              inputtext: {
+                root: { className: 'text-sm p-inputtext-sm' },
               },
-            }}
-          >
-            <RouterProvider router={router} />
-          </PrimeReactProvider>
-        </APIProvider>
-      </GoogleReCaptchaProvider>
-    </AuthProvider>
+              button: {
+                root: { className: 'text-sm' },
+              },
+            },
+          }}
+        >
+          <RouterProvider router={router} />
+        </PrimeReactProvider>
+      </APIProvider>
+    </GoogleReCaptchaProvider>
   </StrictMode>
 )
