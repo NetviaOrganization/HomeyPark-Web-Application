@@ -11,7 +11,7 @@ export const login = async (email: string, password: string) => {
 
   set((state) => {
     state.auth.token = token
-    state.auth.profileId = jwtDecode(token).sub ?? null
+    state.auth.userId = jwtDecode(token).sub ?? null
     state.auth.email = email
   })
 }

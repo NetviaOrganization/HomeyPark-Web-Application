@@ -7,7 +7,12 @@ import { Profile } from '../features/profile/model/profile'
 
 /* ----------  state & actions ---------- */
 interface StoreState {
-  auth: { token: Nullable<string>; profileId: Nullable<string>; email: Nullable<string> }
+  auth: {
+    token: Nullable<string>
+    userId: Nullable<string>
+    email: Nullable<string>
+    profileId: Nullable<string>
+  }
   profileData: { loading: boolean; profile: Nullable<Profile> }
 }
 
@@ -22,7 +27,7 @@ export const appStore = createStore<StoreState, Mutators>(
   persist(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     immer<StoreState>((_set) => ({
-      auth: { token: null, profileId: null, email: null },
+      auth: { token: null, userId: null, email: null, profileId: null },
       profileData: { loading: false, profile: null },
     })),
     {

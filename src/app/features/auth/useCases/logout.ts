@@ -5,6 +5,6 @@ export const logout = () => {
 
   set((state) => {
     state.auth.token = null
-    state.auth.profileId = null
+    state.auth.userId = null
   })
 }
