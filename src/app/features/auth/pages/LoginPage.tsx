@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
-import { useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { login } from '../useCases/login'
 
 const defaultValues = {
@@ -16,10 +16,15 @@ const defaultValues = {
   captcha: false,
 }
 
+const GoogleCaptcha = memo(GoogleReCaptchaCheckbox, (prevProps, nextProps) => {
+  return prevProps.size === nextProps.size && prevProps.onChange === nextProps.onChange
+})
+
 const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { control, handleSubmit, setValue } = useForm({ defaultValues })
+  const { control, handleSubmit, setValue } = useForm({ defaultValues, mode: 'onTouched' })
+  const [error, setError] = useState<string | null>(null)
 
   const onSubmit = async (data: typeof defaultValues) => {
     if (!data.captcha) return
@@ -30,11 +35,19 @@ const LoginPage = () => {
       // login(data.username, data.password)
       navigate('/')
     } catch (err) {
+      setError('Error al iniciar sesión. Por favor, verifica tus credenciales.')
       console.error(err)
     } finally {
       setLoading(false)
     }
   }
+
+  const handleChangeCaptcha = useCallback(
+    (token: string | null) => {
+      setValue('captcha', !!token)
+    },
+    [setValue]
+  )
 
   return (
     <AuthTemplate>
@@ -45,12 +58,16 @@ const LoginPage = () => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label htmlFor="email" className="text-sm font-medium">
-              Username
+              Email
             </label>
             <Controller
               name="email"
               rules={{
                 required: { value: true, message: REQUIRED_INPUT_ERROR },
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: 'El email no es válido',
+                },
               }}
               control={control}
               render={({ field, fieldState }) => (
@@ -102,16 +119,14 @@ const LoginPage = () => {
           </div>
 
           <div className="mt-2">
-            <GoogleReCaptchaCheckbox
-              size="normal"
-              onChange={(token) => {
-                setValue('captcha', !!token)
-              }}
-            />
+            <GoogleCaptcha size="normal" onChange={handleChangeCaptcha} />
           </div>
         </div>
         <div className="mt-8">
           <Button label="Iniciar sesión" loading={loading} type="submit" className="w-full" />
+          {error && (
+            <span className="mt-1 text-red-500 text-center text-sm w-full block">{error}</span>
+          )}
         </div>
         <div className="mt-4">
           <p className="text-center text-sm">
