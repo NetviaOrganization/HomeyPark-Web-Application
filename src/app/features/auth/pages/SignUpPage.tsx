@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router'
 import AuthTemplate from '../template/AuthTemplate'
 import { REQUIRED_INPUT_ERROR } from '@/messages/form'
 import { GoogleReCaptchaCheckbox } from '@google-recaptcha/react'
-import { useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { Nullable } from 'primereact/ts-helpers'
 import { Checkbox } from 'primereact/checkbox'
 import { signUp } from '../useCases/signUp'
@@ -22,6 +22,10 @@ const defaultValues = {
   captcha: false,
 }
 
+const GoogleCaptcha = memo(GoogleReCaptchaCheckbox, (prevProps, nextProps) => {
+  return prevProps.size === nextProps.size && prevProps.onChange === nextProps.onChange
+})
+
 const SignUpPage = () => {
   const [loading, setLoading] = useState(false)
   const [submitError, setSubmitError] = useState<Nullable<string>>(null)
@@ -30,6 +34,8 @@ const SignUpPage = () => {
   const { control, handleSubmit, setValue } = useForm({
     defaultValues,
     shouldFocusError: true,
+    criteriaMode: 'all',
+    mode: 'onTouched',
   })
 
   const onSubmit = async ({
@@ -53,6 +59,13 @@ const SignUpPage = () => {
       setLoading(false)
     }
   }
+
+  const handleChangeCaptcha = useCallback(
+    (token: string | null) => {
+      setValue('captcha', !!token)
+    },
+    [setValue]
+  )
 
   return (
     <AuthTemplate>
@@ -99,6 +112,10 @@ const SignUpPage = () => {
                 name="firstName"
                 rules={{
                   required: { value: true, message: REQUIRED_INPUT_ERROR },
+                  maxLength: {
+                    value: 200,
+                    message: 'El nombre no debe exceder los 200 caracteres',
+                  },
                 }}
                 control={control}
                 render={({ field, fieldState }) => (
@@ -127,6 +144,10 @@ const SignUpPage = () => {
                 name="lastName"
                 rules={{
                   required: { value: true, message: REQUIRED_INPUT_ERROR },
+                  maxLength: {
+                    value: 200,
+                    message: 'El apellido no debe exceder los 200 caracteres',
+                  },
                 }}
                 control={control}
                 render={({ field, fieldState }) => (
@@ -159,6 +180,19 @@ const SignUpPage = () => {
                   control={control}
                   rules={{
                     required: { value: true, message: REQUIRED_INPUT_ERROR },
+                    minLength: {
+                      value: 8,
+                      message: 'La contraseña debe tener al menos 8 caracteres',
+                    },
+                    maxLength: {
+                      value: 30,
+                      message: 'La contraseña no debe exceder los 30 caracteres',
+                    },
+                    pattern: {
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                      message:
+                        'La contraseña debe contener al menos una letra minúscula, una mayúscula y un número',
+                    },
                   }}
                   render={({ field, fieldState }) => (
                     <div className="flex flex-col gap-1 w-full">
@@ -193,6 +227,19 @@ const SignUpPage = () => {
                   name="repeatPassword"
                   rules={{
                     required: { value: true, message: REQUIRED_INPUT_ERROR },
+                    minLength: {
+                      value: 8,
+                      message: 'La contraseña debe tener al menos 8 caracteres',
+                    },
+                    maxLength: {
+                      value: 30,
+                      message: 'La contraseña no debe exceder los 30 caracteres',
+                    },
+                    pattern: {
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                      message:
+                        'La contraseña debe contener al menos una letra minúscula, una mayúscula y un número',
+                    },
                   }}
                   control={control}
                   render={({ field, fieldState }) => (
@@ -260,12 +307,7 @@ const SignUpPage = () => {
           </div>
 
           <div className="mt-2">
-            <GoogleReCaptchaCheckbox
-              size="normal"
-              onChange={(token) => {
-                setValue('captcha', !!token)
-              }}
-            />
+            <GoogleCaptcha size="normal" onChange={handleChangeCaptcha} />
           </div>
         </div>
 
