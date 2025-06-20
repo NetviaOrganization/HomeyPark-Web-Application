@@ -6,15 +6,22 @@ import { Button } from 'primereact/button'
 // import { formatDate } from '@/shared/utils/date'
 import Markdown from 'react-markdown'
 import { formatCurrency } from '@/shared/utils/money'
+import { useAppStore } from '@/app/store/store'
 
 const ParkingDetailPage = () => {
   const { id } = useParams()
-
+  const profileId = useAppStore((state) => state.auth.profileId)
   const navigate = useNavigate()
-
   const { parking, loading } = useParkingDetail(id!)
 
+  const isOwner = Number(profileId) === parking?.profileId
+
   const handleGoBack = () => navigate(-1)
+
+  const handleGoToReservation = () => {
+    if (!parking) return
+    navigate(`/checkout/${parking.id}`)
+  }
 
   return (
     <BasePage>
@@ -54,53 +61,55 @@ const ParkingDetailPage = () => {
             </div>
           </div>
 
-          <div className="max-w-5xl mx-auto grid grid-cols-2 gap-4 mt-8">
-            <div className="flex flex-col gap-8">
-              {/* <div>
-                <h3 className="text-gray-800 text-lg font-medium">Propietario</h3>
-                <div className="mt-1">
-                  <p className="text-sm">
-                    <span>{parking.user.name}</span> <span>{parking.user.lastName}</span>
-                  </p>
-                  <p className="text-sm">
-                    Se unió a HomeyPark desde el {formatDate(parking.user.dateCreated)}
-                  </p>
-                </div>
-              </div> */}
-              <div>
-                <h3 className="text-gray-800 text-lg font-medium">Acerca del servicio</h3>
-                <div className="mt-4">
-                  <div className="flex gap-8">
-                    <div>
-                      <i className="pi pi-home text-3xl mx-auto !block w-fit mb-2"></i>
-                      <p className="text-sm font-medium">Dimensiones</p>
-                      <ul className="text-sm">
-                        <li>Largo: {parking.length}m</li>
-                        <li>Ancho: {parking.width}m</li>
-                        <li>Alto: {parking.height}m</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <i className="pi pi-car text-3xl mx-auto !block w-fit mb-2"></i>
-                      <p className="text-sm font-medium">Espacios en total</p>
-                      <p className="text-sm">Hasta {parking.space} vehículos</p>
-                    </div>
-                    <div>
-                      <i className="pi pi-dollar text-3xl mx-auto !block w-fit mb-2"></i>
-                      <p className="text-sm font-medium">Tarifa/Hora</p>
-                      <p className="text-sm">{formatCurrency(parking.price)} </p>
+          <div className="max-w-5xl mx-auto mt-8">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-8">
+                <div>
+                  <h3 className="text-gray-800 text-lg font-medium">Acerca del servicio</h3>
+                  <div className="mt-4">
+                    <div className="flex gap-8">
+                      <div>
+                        <i className="pi pi-home text-3xl mx-auto !block w-fit mb-2"></i>
+                        <p className="text-sm font-medium">Dimensiones</p>
+                        <ul className="text-sm">
+                          <li>Largo: {parking.length}m</li>
+                          <li>Ancho: {parking.width}m</li>
+                          <li>Alto: {parking.height}m</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <i className="pi pi-car text-3xl mx-auto !block w-fit mb-2"></i>
+                        <p className="text-sm font-medium">Espacios en total</p>
+                        <p className="text-sm">Hasta {parking.space} vehículos</p>
+                      </div>
+                      <div>
+                        <i className="pi pi-dollar text-3xl mx-auto !block w-fit mb-2"></i>
+                        <p className="text-sm font-medium">Tarifa/Hora</p>
+                        <p className="text-sm">{formatCurrency(parking.price)} </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div>
               <div>
-                <h3 className="text-gray-800 text-lg font-medium">Descripción del garaje</h3>
-                <div className="mt-1 text-sm">
-                  <Markdown>{parking.description}</Markdown>
+                <div>
+                  <h3 className="text-gray-800 text-lg font-medium">Descripción del garaje</h3>
+                  <div className="mt-1 text-sm">
+                    <Markdown>{parking.description}</Markdown>
+                  </div>
                 </div>
               </div>
+            </div>
+
+            <div className="flex justify-end mt-8">
+              <Button
+                onClick={handleGoToReservation}
+                disabled={isOwner}
+                label={isOwner ? 'De tu propiedad' : 'Reservar'}
+                icon="pi pi-check"
+                iconPos="right"
+                severity={isOwner ? 'contrast' : 'success'}
+              />
             </div>
           </div>
         </>

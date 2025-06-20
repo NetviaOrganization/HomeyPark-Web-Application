@@ -7,7 +7,10 @@ class ProfileService extends BaseService {
     try {
       const response = await this.http.get<Profile[]>(`${this.baseUrl}/profiles`)
       const users = response.data
-      const user = users.find((user) => user.userId === userId)
+      const user = users.find((user) => Number(user.userId) === Number(userId))
+
+      console.log('Fetched profiles:', users)
+      console.log('Found user:', user)
 
       if (!user) throw new Error(`Profile not found for user ID: ${userId}`)
       return user

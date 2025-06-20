@@ -13,7 +13,7 @@ export const getProfile = async () => {
 
     const profileId = get().auth.profileId
 
-    if (!profileId) throw new Error('Profile ID is not available in the auth state.')
+    if (!profileId) return
 
     const profile = await profileService.getProfileById(profileId)
 
