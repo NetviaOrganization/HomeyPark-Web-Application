@@ -11,18 +11,13 @@ export const signUp = async (
   password: string,
   birthDate: Date
 ) => {
-  try {
-    await authService.signUp({
-      email,
-      password,
-      firstName,
-      lastName,
-      birthDate: birthDate.toISOString(),
-      roles: [ROLE_ADMIN],
-    })
-    await login(email, password)
-  } catch (error) {
-    console.error('Error during sign up:', error)
-    throw error
-  }
+  await authService.signUp({
+    email,
+    password,
+    firstName,
+    lastName,
+    birthDate: birthDate.toISOString(),
+    roles: [ROLE_ADMIN],
+  })
+  await login(email, password)
 }

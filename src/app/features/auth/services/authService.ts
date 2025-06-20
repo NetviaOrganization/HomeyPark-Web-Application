@@ -4,6 +4,7 @@ import BaseService from '@/shared/services/BaseService'
 import { InvalidCredentialsError } from '../errors/invalidCredentialsError'
 import { UserAlreadyExistsError } from '../errors/emailAlreadyExistsError'
 import { Profile, CreateProfileDTO } from '../model/profile'
+import { AxiosError } from 'axios'
 
 class AuthService extends BaseService {
   protected authUrl: string
@@ -31,9 +32,14 @@ class AuthService extends BaseService {
   public async signUp(dto: SignUpDTO) {
     try {
       const response = await this.http.post<SignUpResponse>(`${this.authUrl}/sign-up`, dto)
+
       return response.data
-    } catch {
-      throw new UserAlreadyExistsError('Email already exists')
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.status === 409) throw new UserAlreadyExistsError('Email already exists')
+      }
+
+      throw err
     }
   }
 

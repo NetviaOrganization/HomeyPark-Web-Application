@@ -11,6 +11,7 @@ import { memo, useCallback, useState } from 'react'
 import { Nullable } from 'primereact/ts-helpers'
 import { Checkbox } from 'primereact/checkbox'
 import { signUp } from '../useCases/signUp'
+import { UserAlreadyExistsError } from '../errors/emailAlreadyExistsError'
 
 const defaultValues = {
   email: '',
@@ -54,7 +55,9 @@ const SignUpPage = () => {
       await signUp(email, firstName, lastName, password, new Date('2024-01-01'))
       navigate('/')
     } catch (err) {
-      console.error('Error during sign up:', err)
+      if (err instanceof UserAlreadyExistsError) {
+        setSubmitError('El email ya está registrado. Por favor, intenta con otro.')
+      }
     } finally {
       setLoading(false)
     }
