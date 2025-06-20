@@ -5,11 +5,14 @@ import { Button } from 'primereact/button'
 import StreetView from '@/shared/components/StreetView'
 import { formatCurrency } from '@/shared/utils/money'
 import Portal from '@/shared/components/Portal'
+import { useAppStore } from '@/app/store/store'
 
 const ParkingSummaryAside: FC<Props> = ({ parking, onClose, onClickDetail, onClickReserve }) => {
   const [uiParking, setUiParking] = useState<Nullable<Parking>>(parking)
   const [visible, setVisible] = useState(!!parking)
   const timeoutRef = useRef<number>(null)
+  const profileId = useAppStore((state) => state.auth.profileId)
+  const isOwner = Number(profileId) === uiParking?.profileId
 
   useEffect(() => {
     setVisible(!!parking)
@@ -111,9 +114,11 @@ const ParkingSummaryAside: FC<Props> = ({ parking, onClose, onClickDetail, onCli
                 <Button
                   onClick={onClickReserve}
                   className="w-full"
-                  label="Reservar"
+                  disabled={isOwner}
+                  label={isOwner ? 'De tu propiedad' : 'Reservar'}
                   icon="pi pi-check"
                   iconPos="right"
+                  severity={isOwner ? 'contrast' : 'success'}
                 />
               </div>
             </div>
